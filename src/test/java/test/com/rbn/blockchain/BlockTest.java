@@ -12,12 +12,13 @@ public class BlockTest {
   @Test
   @DisplayName("has a timestamp, lastHash, hash, and data property")
   void simpleCreation() {
-    var block = new Block("lastHash", "nonce", "data");
+    var block = new Block("lastHash", "data");
     assertNotNull(block.getTimestamp());
     assertNotNull(block.getHash());
     assertEquals("lastHash", block.getLastHash());
-    assertEquals("nonce", block.getNonce());
+    assertEquals(0, block.getNonce());
     assertEquals("data", block.getData());
+    assertEquals(1, block.getDifficulty());
   }
 
   @Test
@@ -27,19 +28,20 @@ public class BlockTest {
     assertNotNull(genesisBlock.getTimestamp());
     assertNotNull(genesisBlock.getHash());
     assertEquals("lastGenesisHash", genesisBlock.getLastHash());
-    assertEquals("fistNonce", genesisBlock.getNonce());
+    assertEquals(0, genesisBlock.getNonce());
     assertEquals("genesisData", genesisBlock.getData());
+    assertEquals(-1, genesisBlock.getDifficulty());
   }
 
   @Test
   @DisplayName("mineBlock()")
   void mineBlock() {
     var genesisBlock = Block.getGenesisBlock();
-    var block = Block.mine(genesisBlock, "data");
+    var block = new Block(genesisBlock.getHash(), "data").mine();
     assertNotNull(genesisBlock.getTimestamp());
     assertNotNull(block.getHash());
     assertEquals(genesisBlock.getHash(), block.getLastHash());
-    assertEquals("nonce", block.getNonce());
+    assertEquals(0, block.getNonce());
     assertEquals("data", block.getData());
   }
 

@@ -16,10 +16,8 @@ public class BlockchainTest {
     //given
     Blockchain blockchain = new Blockchain();
     var lastBlock = blockchain.getLastBlock();
-    var block = new Block(lastBlock.getHash(), "nonce", "data");
-
     //when
-    blockchain.addBlock(block);
+    Block block = blockchain.addBlock("data");
 
     // then
     var lastBlockAdded = blockchain.getLastBlock();
@@ -48,21 +46,6 @@ public class BlockchainTest {
   }
 
   @Test
-  @DisplayName("cannot replace invalid chain")
-  void cannot_replace_invalid_chain() {
-    //given
-    Blockchain firstBlockChain = getBlockchainWith3BlocksInvalid();
-    Blockchain secondBlockChain = getBlockChainWith2Blocks();
-
-    //when
-    secondBlockChain.replaceChain(firstBlockChain);
-
-    // then
-    assertEquals(2, secondBlockChain.getChain().size());
-    assertTrue(secondBlockChain.isChainValid());
-  }
-
-  @Test
   @DisplayName("cannot replace smaller chain")
   void doNotReplaceChain() {
     //given
@@ -79,25 +62,15 @@ public class BlockchainTest {
 
   private Blockchain getBlockChainWith2Blocks() {
     Blockchain secondBlockChain = new Blockchain();
-    secondBlockChain.addBlock(new Block(secondBlockChain.getLastBlock().getHash(), "nonce", "data"));
+    secondBlockChain.addBlock("data");
     return secondBlockChain;
   }
 
   private Blockchain getBlockchainWith3Blocks() {
     Blockchain firstBlockChain = new Blockchain();
     var lastBlock = firstBlockChain.getLastBlock();
-    Block secondBlock = new Block(lastBlock.getHash(), "nonce", "data");
-    firstBlockChain.addBlock(secondBlock);
-    firstBlockChain.addBlock(new Block(secondBlock.getHash(), "nonce", "data"));
-    return firstBlockChain;
-  }
-
-  private Blockchain getBlockchainWith3BlocksInvalid() {
-    Blockchain firstBlockChain = new Blockchain();
-    var lastBlock = firstBlockChain.getLastBlock();
-    Block secondBlock = new Block(lastBlock.getHash(), "nonce", "data");
-    firstBlockChain.addBlock(secondBlock);
-    firstBlockChain.addBlock(new Block(lastBlock.getHash(), "nonce", "data"));
+    firstBlockChain.addBlock("data");
+    firstBlockChain.addBlock("data");
     return firstBlockChain;
   }
 

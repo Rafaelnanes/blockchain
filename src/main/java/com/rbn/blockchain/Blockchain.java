@@ -13,8 +13,11 @@ public class Blockchain {
     chain.add(Block.getGenesisBlock());
   }
 
-  public void addBlock(Block block) {
-    this.chain.add(block);
+  public Block addBlock(String data) {
+    String lastHash = this.chain.get(this.chain.size() - 1).getHash();
+    Block blockMined = new Block(lastHash, data).mine();
+    this.chain.add(blockMined);
+    return blockMined;
   }
 
   public Block getLastBlock() {
