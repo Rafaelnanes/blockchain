@@ -1,22 +1,17 @@
-name: Maven CI/CD
+name: Java CI
 
-on:
- push:
-    branches: [ master ]
- pull_request:
-    branches: [ master ]
+on: [push]
 
 jobs:
-  build_and_test:
-
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 11
-      uses: actions/setup-java@v1
-      with:
-        java-version: 14
-
-    - name: Build project with Maven
-      run: mvn -B package --file pom.xml
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+      - name: Build with Maven
+        run: mvn --batch-mode --update-snapshots verify
