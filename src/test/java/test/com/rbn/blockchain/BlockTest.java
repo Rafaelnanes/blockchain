@@ -14,7 +14,7 @@ public class BlockTest {
   void simpleCreation() {
     var block = new Block("lastHash", "nonce", "data");
     assertNotNull(block.getTimestamp());
-    assertEquals("3985edc1088558b67b84bc68b5b026590c31652432bc1ca556da7ff69b297c88", block.getHash());
+    assertNotNull(block.getHash());
     assertEquals("lastHash", block.getLastHash());
     assertEquals("nonce", block.getNonce());
     assertEquals("data", block.getData());
@@ -25,7 +25,7 @@ public class BlockTest {
   void getGenesisBlock() {
     var genesisBlock = Block.getGenesisBlock();
     assertNotNull(genesisBlock.getTimestamp());
-    assertEquals("ba15c885714a5df52c90cb291bb9fc02da5301633b31186d8d4b07d801ce06cd", genesisBlock.getHash());
+    assertNotNull(genesisBlock.getHash());
     assertEquals("lastGenesisHash", genesisBlock.getLastHash());
     assertEquals("fistNonce", genesisBlock.getNonce());
     assertEquals("genesisData", genesisBlock.getData());
@@ -37,7 +37,7 @@ public class BlockTest {
     var genesisBlock = Block.getGenesisBlock();
     var block = Block.mine(genesisBlock, "data");
     assertNotNull(genesisBlock.getTimestamp());
-    assertEquals("57848a1170a4c81d3c0e6eac0e66813d2de3c7e8066342dc3d3ce60e49a68e7d", block.getHash());
+    assertNotNull(block.getHash());
     assertEquals(genesisBlock.getHash(), block.getLastHash());
     assertEquals("nonce", block.getNonce());
     assertEquals("data", block.getData());

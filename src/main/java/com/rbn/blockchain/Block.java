@@ -17,8 +17,10 @@ public class Block {
 
   public Block(String lastHash, String nonce, String data) {
     this.timestamp = LocalDateTime.now();
-    //FIXME Can't use timestamp to generate the hash cuz of the tests
-    String reduce = Stream.of(data, lastHash, nonce)
+    String reduce = Stream.of(this.timestamp.toString(),
+                              data,
+                              lastHash,
+                              nonce)
                           .reduce("", (a, b) -> String.format("%s %s", a, b));
     this.hash = DigestUtils.sha256Hex(reduce);
     this.lastHash = lastHash;
