@@ -10,11 +10,11 @@ import java.util.stream.Stream;
 public class Block {
 
   private final LocalDateTime timestamp;
-  private final String hash;
   private final String lastHash;
   private final String data;
   private final long difficulty;
-  private long nonce;
+  private long nonce = -1;
+  private String hash;
 
   public Block(String lastHash, String data) {
     this(lastHash, data, 1);
@@ -22,27 +22,36 @@ public class Block {
 
   public Block(String lastHash, String data, long difficulty) {
     this.timestamp = LocalDateTime.now();
-    String reduce = Stream.of(String.valueOf(difficulty),
-                              this.timestamp.toString(),
-                              data,
-                              lastHash)
-                          .reduce("", (a, b) -> String.format("%s %s", a, b));
-    this.hash = DigestUtils.sha256Hex(reduce);
     this.lastHash = lastHash;
     this.data = data;
     this.difficulty = difficulty;
   }
 
+  private Block(String lastHash, String data, long difficulty, String hash) {
+    this(lastHash, data, difficulty);
+    this.hash = hash;
+  }
+
   public static Block getGenesisBlock() {
-    return new Block("lastGenesisHash", "genesisData", -1);
+    return new Block("lastGenesisHash", "genesisData", -1, "00");
+  }
+
+  public static String generateHash(Block block) {
+    return DigestUtils.sha256Hex(Stream.of(block.getTimestamp().toString(),
+                                           block.getLastHash(),
+                                           block.getData(),
+                                           String.valueOf(block.getDifficulty()),
+                                           String.valueOf(block.getNonce()))
+                                       .reduce("", (a, b) -> String.format("%s %s", a, b)));
   }
 
   public Block mine() {
-    String result = "";
+    String finalHash = null;
     do {
-
-    } while (result.startsWith("000"));
-    //    return new Block(this.getHash(), 0, data);
+      nonce++;
+      finalHash = generateHash(this);
+    } while (!finalHash.startsWith("000"));
+    this.hash = finalHash;
     return this;
   }
 
