@@ -44,7 +44,7 @@ public class Blockchain {
     for (int i = 1; i < chain.size(); i++) {
       Block lastBlock = chain.get(i - 1);
       Block currentBlock = chain.get(i);
-      boolean wrongProofOfWork = Block.generateHash(currentBlock).equals(currentBlock.getHash());
+      boolean wrongProofOfWork = !Block.generateHash(currentBlock).equals(currentBlock.getHash());
       boolean lastHashDoNotMatch = !currentBlock.getLastHash().equals(lastBlock.getHash());
       if (lastHashDoNotMatch || wrongProofOfWork) {
         isValid = false;

@@ -48,7 +48,8 @@ public class Block {
   }
 
   public static Block getGenesisBlock() {
-    return new Block(System.currentTimeMillis(), "lastGenesisHash", "genesisData", -1, -1, "00");
+    return new Block(System.currentTimeMillis(), "lastGenesisHash", "genesisData", -1, -1,
+        "d2b402d8ef34562e8c1391dd5cf0a0da1e902642a23965440953bbe4762b474e");
   }
 
   public static String generateHash(Block block) {

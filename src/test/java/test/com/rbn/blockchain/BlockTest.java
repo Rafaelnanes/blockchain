@@ -27,7 +27,7 @@ public class BlockTest {
   void getGenesisBlock() {
     var genesisBlock = Block.getGenesisBlock();
     assertTrue(genesisBlock.getTimestamp() > 0);
-    assertEquals("00", genesisBlock.getHash());
+    assertEquals("d2b402d8ef34562e8c1391dd5cf0a0da1e902642a23965440953bbe4762b474e", genesisBlock.getHash());
     assertEquals("lastGenesisHash", genesisBlock.getLastHash());
     assertEquals(-1, genesisBlock.getNonce());
     assertEquals("genesisData", genesisBlock.getData());
@@ -37,12 +37,10 @@ public class BlockTest {
   @Test
   @DisplayName("mineBlock()")
   void mineBlock() {
-    long now = System.currentTimeMillis();
     var genesisBlock = Block.getGenesisBlock();
     var block = new Block(genesisBlock.getHash(), "data").mine();
     assertEquals(Block.generateHash(block), block.getHash());
-    long time = System.currentTimeMillis() - now;
-    assertTrue(time > Block.MINE_RATE);
+    assertTrue(block.getEffort() < Block.MINE_RATE);
   }
 
 }
