@@ -1,33 +1,29 @@
 package com.rbn.blockchain.web;
 
 import com.rbn.blockchain.model.Blockchain;
+import com.rbn.blockchain.service.DefaultBlockchainService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.annotation.PostConstruct;
 
 @RestController
 @RequestMapping("/blockchain")
 public class BlockchainController {
 
-  private Blockchain blockchain;
-
-  @PostConstruct
-  public void init() {
-    this.blockchain = new Blockchain();
-  }
+  @Autowired
+  private DefaultBlockchainService blockchainService;
 
   @GetMapping
   public Blockchain get() {
-    return blockchain;
+    return blockchainService.getBlockchain();
   }
 
-  @PostMapping("/replace")
+  @PutMapping
   public Blockchain post(@RequestBody Blockchain blockchain) {
-    return blockchain.replaceChain(blockchain);
+    return blockchainService.replace(blockchain);
   }
 
 }

@@ -1,21 +1,27 @@
 package com.rbn.blockchain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import org.apache.commons.codec.digest.DigestUtils;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Objects;
 import java.util.stream.Stream;
 
 @Getter
 public class Block {
 
-  public static final long MINE_RATE = 1000;
-  private final long timestamp;
+  public static final long MINE_RATE = 4000;
   private final String lastHash;
   private final String data;
-  private int difficulty;
+  private final int difficulty;
+  @JsonIgnore
+  private long timestamp;
   private long nonce;
   private String hash;
+  private long effort = 0;
 
   public Block(String lastHash, String data) {
     this(lastHash, data, 2);
@@ -29,21 +35,25 @@ public class Block {
     this.nonce = -1;
   }
 
-  private Block(String lastHash, String data, int difficulty, String hash, long nonce) {
+  private Block(long timestamp,
+                String lastHash,
+                String data,
+                int difficulty,
+                long nonce,
+                String hash) {
     this(lastHash, data, difficulty);
     this.hash = hash;
     this.nonce = nonce;
+    this.timestamp = timestamp;
   }
 
   public static Block getGenesisBlock() {
-    return new Block("lastGenesisHash", "genesisData", -1, "00", -1);
+    return new Block(System.currentTimeMillis(), "lastGenesisHash", "genesisData", -1, -1, "00");
   }
 
   public static String generateHash(Block block) {
-    return DigestUtils.sha256Hex(Stream.of(String.valueOf(block.getTimestamp()),
-                                           block.getLastHash(),
+    return DigestUtils.sha256Hex(Stream.of(block.getLastHash(),
                                            block.getData(),
-                                           String.valueOf(block.getDifficulty()),
                                            String.valueOf(block.getNonce()))
                                        .reduce("", (a, b) -> String.format("%s %s", a, b)));
   }
@@ -63,27 +73,19 @@ public class Block {
   }
 
   public Block mine() {
-
     String finalHash = null;
     do {
       nonce++;
-      long spentTime = System.currentTimeMillis() - this.timestamp;
+      effort = System.currentTimeMillis() - this.timestamp;
+      finalHash = generateHash(this);
+    } while (!Objects.requireNonNull(finalHash).matches(String.format("^\\d{%d}\\w*$", difficulty)));
 
-      if (difficulty > 256) {
-        difficulty--;
-        continue;
-      }
-
-      if (spentTime <= MINE_RATE) {
-        difficulty++;
-      } else {
-        difficulty--;
-      }
-
-      finalHash = generateHashToBinaryString(this);
-    } while (!Objects.requireNonNull(finalHash).startsWith("0".repeat(difficulty)));
     this.hash = generateHash(this);
     return this;
+  }
+
+  public LocalDateTime getReceivedTime() {
+    return LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault());
   }
 
 }

@@ -16,8 +16,15 @@ public class Blockchain {
   }
 
   public Block addBlock(String data) {
-    String lastHash = this.chain.get(this.chain.size() - 1).getHash();
-    Block blockMined = new Block(lastHash, data).mine();
+    Block lastBlock = this.chain.get(this.chain.size() - 1);
+    String lastHash = lastBlock.getHash();
+    int difficulty = lastBlock.getDifficulty();
+    if (lastBlock.getEffort() >= Block.MINE_RATE) {
+      difficulty--;
+    } else {
+      difficulty++;
+    }
+    Block blockMined = new Block(lastHash, data, difficulty).mine();
     this.chain.add(blockMined);
     return blockMined;
   }
@@ -37,7 +44,9 @@ public class Blockchain {
     for (int i = 1; i < chain.size(); i++) {
       Block lastBlock = chain.get(i - 1);
       Block currentBlock = chain.get(i);
-      if (!currentBlock.getLastHash().equals(lastBlock.getHash())) {
+      boolean wrongProofOfWork = Block.generateHash(currentBlock).equals(currentBlock.getHash());
+      boolean lastHashDoNotMatch = !currentBlock.getLastHash().equals(lastBlock.getHash());
+      if (lastHashDoNotMatch || wrongProofOfWork) {
         isValid = false;
         break;
       }
