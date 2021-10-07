@@ -1,4 +1,6 @@
-package com.rbn.blockchain;
+package com.rbn.blockchain.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,6 +22,7 @@ public class Blockchain {
     return blockMined;
   }
 
+  @JsonIgnore
   public Block getLastBlock() {
     return chain.get(chain.size() - 1);
   }
@@ -28,6 +31,7 @@ public class Blockchain {
     return Collections.unmodifiableList(chain);
   }
 
+  @JsonIgnore
   public boolean isChainValid() {
     boolean isValid = true;
     for (int i = 1; i < chain.size(); i++) {
@@ -41,13 +45,14 @@ public class Blockchain {
     return isValid;
   }
 
-  public void replaceChain(Blockchain blockchain) {
+  public Blockchain replaceChain(Blockchain blockchain) {
     List<Block> localChain = blockchain.getChain();
     boolean isBigger = localChain.size() > this.chain.size();
     if (isBigger && blockchain.isChainValid()) {
       this.chain.clear();
       this.chain.addAll(localChain);
     }
+    return this;
   }
 
 }

@@ -1,4 +1,4 @@
-package com.rbn.blockchain;
+package com.rbn.blockchain.model;
 
 import lombok.Getter;
 import org.apache.commons.codec.digest.DigestUtils;

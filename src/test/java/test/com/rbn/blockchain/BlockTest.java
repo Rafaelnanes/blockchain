@@ -1,6 +1,6 @@
 package test.com.rbn.blockchain;
 
-import com.rbn.blockchain.Block;
+import com.rbn.blockchain.model.Block;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
