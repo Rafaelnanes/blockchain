@@ -40,7 +40,7 @@ public class BlockTest {
     var genesisBlock = Block.getGenesisBlock();
     var block = new Block(genesisBlock.getHash(), "data").mine();
     assertEquals(Block.generateHash(block), block.getHash());
-    assertTrue(block.getEffort() < Block.MINE_RATE);
+    assertTrue(false);
   }
 
 }
