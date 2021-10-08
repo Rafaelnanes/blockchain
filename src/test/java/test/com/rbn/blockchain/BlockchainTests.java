@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class BlockchainTest {
+public class BlockchainTests {
 
   @Test
   @DisplayName("create a new block")
@@ -17,7 +17,7 @@ public class BlockchainTest {
     //given
     Blockchain blockchain = new Blockchain();
     var lastBlock = blockchain.getLastBlock();
-    
+
     //when
     Block block = Block.mine(blockchain.getLastBlock().getHash(), "data");
     blockchain.addBlock(block);
