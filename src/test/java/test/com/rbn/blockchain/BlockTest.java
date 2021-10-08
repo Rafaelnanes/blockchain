@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BlockTest {
@@ -13,13 +12,13 @@ public class BlockTest {
   @Test
   @DisplayName("has a timestamp, lastHash, hash, and data property")
   void simpleCreation() {
-    var block = new Block("lastHash", "data");
+    var block = Block.mine("lastHash", "data");
     assertTrue(block.getTimestamp() > 0);
-    assertNull(block.getHash());
+    assertEquals("9652315df723755aac3ff4ad0c8c85eaa2565da127705021232241bf08442d61", block.getHash());
     assertEquals("lastHash", block.getLastHash());
-    assertEquals(-1, block.getNonce());
+    assertEquals(2, block.getNonce());
     assertEquals("data", block.getData());
-    assertEquals(2, block.getDifficulty());
+    assertEquals(4, block.getDifficulty());
   }
 
   @Test
@@ -38,9 +37,9 @@ public class BlockTest {
   @DisplayName("mineBlock()")
   void mineBlock() {
     var genesisBlock = Block.getGenesisBlock();
-    var block = new Block(genesisBlock.getHash(), "data").mine();
-    assertEquals(Block.generateHash(block), block.getHash());
-    assertTrue(block.getEffort() < Block.MINE_RATE);
+    var block = Block.mine(genesisBlock.getHash(), "data");
+    assertEquals(Block.generateHash(genesisBlock.getHash(), "data", block.getNonce()), block.getHash());
+    assertTrue(block.getEffort() > 0);
   }
 
 }

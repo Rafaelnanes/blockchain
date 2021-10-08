@@ -1,5 +1,6 @@
 package test.com.rbn.blockchain;
 
+import com.rbn.blockchain.exception.InvalidBlockException;
 import com.rbn.blockchain.model.Block;
 import com.rbn.blockchain.model.Blockchain;
 import org.junit.jupiter.api.DisplayName;
@@ -12,12 +13,14 @@ public class BlockchainTest {
 
   @Test
   @DisplayName("create a new block")
-  void simpleCreation() {
+  void simpleCreation() throws InvalidBlockException {
     //given
     Blockchain blockchain = new Blockchain();
     var lastBlock = blockchain.getLastBlock();
+    
     //when
-    Block block = blockchain.addBlock("data");
+    Block block = Block.mine(blockchain.getLastBlock().getHash(), "data");
+    blockchain.addBlock(block);
 
     // then
     var lastBlockAdded = blockchain.getLastBlock();
@@ -32,7 +35,7 @@ public class BlockchainTest {
 
   @Test
   @DisplayName("replace chain")
-  void replaceChain() {
+  void replaceChain() throws InvalidBlockException {
     //given
     Blockchain firstBlockChain = getBlockchainWith3Blocks();
     Blockchain secondBlockChain = getBlockChainWith2Blocks();
@@ -47,7 +50,7 @@ public class BlockchainTest {
 
   @Test
   @DisplayName("cannot replace smaller chain")
-  void doNotReplaceChain() {
+  void doNotReplaceChain() throws InvalidBlockException {
     //given
     Blockchain firstBlockChain = getBlockChainWith2Blocks();
     Blockchain secondBlockChain = getBlockchainWith3Blocks();
@@ -60,17 +63,20 @@ public class BlockchainTest {
     assertTrue(secondBlockChain.isChainValid());
   }
 
-  private Blockchain getBlockChainWith2Blocks() {
+  private Blockchain getBlockChainWith2Blocks() throws InvalidBlockException {
     Blockchain secondBlockChain = new Blockchain();
-    secondBlockChain.addBlock("data");
+    Block block = Block.mine(secondBlockChain.getLastBlock().getHash(), "data");
+    secondBlockChain.addBlock(block);
     return secondBlockChain;
   }
 
-  private Blockchain getBlockchainWith3Blocks() {
+  private Blockchain getBlockchainWith3Blocks() throws InvalidBlockException {
     Blockchain firstBlockChain = new Blockchain();
     var lastBlock = firstBlockChain.getLastBlock();
-    firstBlockChain.addBlock("data");
-    firstBlockChain.addBlock("data");
+    Block block = Block.mine(firstBlockChain.getLastBlock().getHash(), "data");
+    firstBlockChain.addBlock(block);
+    Block block2 = Block.mine(firstBlockChain.getLastBlock().getHash(), "data2");
+    firstBlockChain.addBlock(block2);
     return firstBlockChain;
   }
 

@@ -13,54 +13,49 @@ import java.util.stream.Stream;
 @Getter
 public class Block {
 
-  public static final long MINE_RATE = 4000;
+  public static final long MINE_RATE = 1000;
   private final String lastHash;
   private final String data;
   private final int difficulty;
   @JsonIgnore
-  private long timestamp;
-  private long nonce;
-  private String hash;
-  private long effort = 0;
+  private final long timestamp;
+  private final long effort;
+  private final long nonce;
+  private final String hash;
 
-  public Block(String lastHash, String data) {
-    this(lastHash, data, 2);
-  }
-
-  public Block(String lastHash, String data, int difficulty) {
-    this.timestamp = System.currentTimeMillis();
-    this.lastHash = lastHash;
-    this.data = data;
-    this.difficulty = difficulty;
-    this.nonce = -1;
-  }
-
-  private Block(long timestamp,
-                String lastHash,
+  private Block(String lastHash,
                 String data,
                 int difficulty,
                 long nonce,
-                String hash) {
-    this(lastHash, data, difficulty);
+                String hash,
+                long effort) {
+    this.difficulty = difficulty;
+    this.data = data;
+    this.lastHash = lastHash;
+    this.timestamp = System.currentTimeMillis();
     this.hash = hash;
     this.nonce = nonce;
-    this.timestamp = timestamp;
+    this.effort = effort;
   }
 
   public static Block getGenesisBlock() {
-    return new Block(System.currentTimeMillis(), "lastGenesisHash", "genesisData", -1, -1,
-        "d2b402d8ef34562e8c1391dd5cf0a0da1e902642a23965440953bbe4762b474e");
+    return new Block("lastGenesisHash",
+        "genesisData",
+        -1,
+        -1,
+        "d2b402d8ef34562e8c1391dd5cf0a0da1e902642a23965440953bbe4762b474e",
+        0);
   }
 
-  public static String generateHash(Block block) {
-    return DigestUtils.sha256Hex(Stream.of(block.getLastHash(),
-                                           block.getData(),
-                                           String.valueOf(block.getNonce()))
+  public static String generateHash(String lastHash, String data, long nonce) {
+    return DigestUtils.sha256Hex(Stream.of(lastHash,
+                                           data,
+                                           String.valueOf(nonce))
                                        .reduce("", (a, b) -> String.format("%s %s", a, b)));
   }
 
-  public static String generateHashToBinaryString(Block block) {
-    String s = generateHash(block);
+  public static String generateHashToBinaryString(String lastHash, String data, long nonce) {
+    String s = generateHash(lastHash, data, nonce);
     byte[] bytes = s.getBytes();
     StringBuilder binary = new StringBuilder();
     for (byte b : bytes) {
@@ -73,16 +68,28 @@ public class Block {
     return binary.toString();
   }
 
-  public Block mine() {
+  public static Block mine(String lastHash, String data) {
     String finalHash = null;
+    long nonce = 0;
+    long effort = 0;
+    long initialTime = System.currentTimeMillis();
+    int difficulty = 2;
     do {
       nonce++;
-      effort = System.currentTimeMillis() - this.timestamp;
-      finalHash = generateHash(this);
+      effort = System.currentTimeMillis() - initialTime;
+      int maxDifficulty = 60;
+      if (difficulty > maxDifficulty) {
+        difficulty = maxDifficulty;
+      }
+      if (effort >= Block.MINE_RATE && difficulty > 1) {
+        difficulty--;
+      } else {
+        difficulty++;
+      }
+      finalHash = generateHash(lastHash, data, nonce);
     } while (!Objects.requireNonNull(finalHash).matches(String.format("^\\d{%d}\\w*$", difficulty)));
 
-    this.hash = generateHash(this);
-    return this;
+    return new Block(lastHash, data, difficulty, nonce, finalHash, effort);
   }
 
   public LocalDateTime getReceivedTime() {

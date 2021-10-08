@@ -25,6 +25,6 @@ public class DefaultBlockchainService {
   }
 
   public Block mine(String data) {
-    return blockchain.addBlock(data);
+    return Block.mine(blockchain.getLastBlock().getHash(), data);
   }
 }

@@ -1,6 +1,7 @@
 package com.rbn.blockchain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.rbn.blockchain.exception.InvalidBlockException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,18 +16,16 @@ public class Blockchain {
     chain.add(Block.getGenesisBlock());
   }
 
-  public Block addBlock(String data) {
+  public void addBlock(Block block) throws InvalidBlockException {
     Block lastBlock = this.chain.get(this.chain.size() - 1);
-    String lastHash = lastBlock.getHash();
-    int difficulty = lastBlock.getDifficulty();
-    if (lastBlock.getEffort() >= Block.MINE_RATE) {
-      difficulty--;
+    boolean lastHashValid = block.getLastHash().equals(lastBlock.getHash());
+    boolean validProofOfWork =
+        Block.generateHash(lastBlock.getHash(), block.getData(), block.getNonce()).equals(block.getHash());
+    if (lastHashValid && validProofOfWork) {
+      this.chain.add(block);
     } else {
-      difficulty++;
+      throw new InvalidBlockException();
     }
-    Block blockMined = new Block(lastHash, data, difficulty).mine();
-    this.chain.add(blockMined);
-    return blockMined;
   }
 
   @JsonIgnore
@@ -44,7 +43,9 @@ public class Blockchain {
     for (int i = 1; i < chain.size(); i++) {
       Block lastBlock = chain.get(i - 1);
       Block currentBlock = chain.get(i);
-      boolean wrongProofOfWork = !Block.generateHash(currentBlock).equals(currentBlock.getHash());
+      String hashGenerated =
+          Block.generateHash(currentBlock.getLastHash(), currentBlock.getData(), currentBlock.getNonce());
+      boolean wrongProofOfWork = !hashGenerated.equals(currentBlock.getHash());
       boolean lastHashDoNotMatch = !currentBlock.getLastHash().equals(lastBlock.getHash());
       if (lastHashDoNotMatch || wrongProofOfWork) {
         isValid = false;
