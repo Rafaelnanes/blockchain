@@ -20,8 +20,6 @@ public class DefaultBlockchainService {
   @Autowired
   private DefaultNodeService broadcastService;
 
-  private String currentDataBeingMined = "";
-
   @PostConstruct
   public void init() {
     updateBlockchain();
@@ -46,18 +44,7 @@ public class DefaultBlockchainService {
     log.info("Added block: {}", block);
   }
 
-  public Block mineAndBroadcast(String data) {
-    log.info("Broadcasting mining");
-    broadcastService.mine(data);
-    return mine(data);
-  }
-
   public Block mine(String data) {
-    if (currentDataBeingMined.equals(data)) {
-      log.info("This data has been being mined");
-      return null;
-    }
-    currentDataBeingMined = data;
     log.info("Mining block");
     Block lastBlock = blockchain.getLastBlock();
     Block blockMined = Block.mine(lastBlock.getHash(),
@@ -66,8 +53,8 @@ public class DefaultBlockchainService {
 
     log.info("Broadcasting mined block");
     broadcastService.newBlockBroadcast(blockMined);
-    currentDataBeingMined = "";
     log.info("Block mined");
+    add(blockMined);
     return blockMined;
   }
 

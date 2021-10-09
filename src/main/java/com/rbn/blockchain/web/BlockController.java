@@ -40,13 +40,8 @@ public class BlockController {
     blockchainService.add(block);
   }
 
-  @PostMapping("/mine/broadcast")
-  public Block mineAndBroadcast(@RequestBody String data) {
-    return blockchainService.mineAndBroadcast(data);
-  }
-
   @PostMapping("/mine")
-  public Block mine1(@RequestBody String data) {
+  public Block mine(@RequestBody String data) {
     return blockchainService.mine(data);
   }
 
