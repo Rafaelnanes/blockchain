@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BlockTests {
@@ -14,7 +15,7 @@ public class BlockTests {
   void simpleCreation() {
     var block = Block.mine("lastHash", "data");
     assertTrue(block.getTimestamp() > 0);
-    assertEquals("9652315df723755aac3ff4ad0c8c85eaa2565da127705021232241bf08442d61", block.getHash());
+    assertNotNull(block.getHash());
     assertEquals("lastHash", block.getLastHash());
     assertEquals(2, block.getNonce());
     assertEquals("data", block.getData());
@@ -38,8 +39,14 @@ public class BlockTests {
   void mineBlock() {
     var genesisBlock = Block.getGenesisBlock();
     var block = Block.mine(genesisBlock.getHash(), "data");
-    assertEquals(Block.generateHash(genesisBlock.getHash(), "data", block.getNonce()), block.getHash());
-    assertTrue(block.getEffort() > 0);
+    String generatedHash = Block.generateHash(genesisBlock.getHash(),
+        "data",
+        block.getNonce(),
+        block.getDifficulty(),
+        block.getEffortTime(),
+        block.getTimestamp());
+    assertEquals(generatedHash, block.getHash());
+    assertTrue(block.getEffortTime() > 0);
   }
 
 }

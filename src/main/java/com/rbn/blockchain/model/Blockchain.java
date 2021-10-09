@@ -18,9 +18,15 @@ public class Blockchain {
 
   public void addBlock(Block block) throws InvalidBlockException {
     Block lastBlock = this.chain.get(this.chain.size() - 1);
+    String generatedHash = Block.generateHash(lastBlock.getHash(),
+        block.getData(),
+        block.getNonce(),
+        block.getDifficulty(),
+        block.getEffortTime(),
+        block.getTimestamp());
     boolean lastHashValid = block.getLastHash().equals(lastBlock.getHash());
     boolean validProofOfWork =
-        Block.generateHash(lastBlock.getHash(), block.getData(), block.getNonce()).equals(block.getHash());
+        generatedHash.equals(block.getHash());
     if (lastHashValid && validProofOfWork) {
       this.chain.add(block);
     } else {
@@ -43,9 +49,13 @@ public class Blockchain {
     for (int i = 1; i < chain.size(); i++) {
       Block lastBlock = chain.get(i - 1);
       Block currentBlock = chain.get(i);
-      String hashGenerated =
-          Block.generateHash(currentBlock.getLastHash(), currentBlock.getData(), currentBlock.getNonce());
-      boolean wrongProofOfWork = !hashGenerated.equals(currentBlock.getHash());
+      String generatedHash = Block.generateHash(lastBlock.getHash(),
+          currentBlock.getData(),
+          currentBlock.getNonce(),
+          currentBlock.getDifficulty(),
+          currentBlock.getEffortTime(),
+          currentBlock.getTimestamp());
+      boolean wrongProofOfWork = !generatedHash.equals(currentBlock.getHash());
       boolean lastHashDoNotMatch = !currentBlock.getLastHash().equals(lastBlock.getHash());
       if (lastHashDoNotMatch || wrongProofOfWork) {
         isValid = false;
