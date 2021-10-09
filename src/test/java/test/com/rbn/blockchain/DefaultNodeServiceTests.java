@@ -31,9 +31,9 @@ public class DefaultNodeServiceTests {
 
   @Test
   void simpleCreation() {
-    defaultNodeService.register("http://localhost:8081");
-    defaultNodeService.register("http://localhost:8082");
-    Set<String> nodes = defaultNodeService.register("http://localhost:80");
+    defaultNodeService.registerBulk("http://localhost:8081");
+    defaultNodeService.registerBulk("http://localhost:8082");
+    Set<String> nodes = defaultNodeService.registerBulk("http://localhost:80");
     Assertions.assertFalse(nodes.isEmpty());
     Assertions.assertEquals(2, nodes.size());
     Assertions.assertTrue(nodes.contains("http://localhost:8081"));
@@ -46,7 +46,7 @@ public class DefaultNodeServiceTests {
     list.add("http://localhost:8081");
     list.add("http://localhost:8082");
     list.add("http://localhost:80");
-    Set<String> nodes = defaultNodeService.register(list);
+    Set<String> nodes = defaultNodeService.registerBulk(list);
     Assertions.assertFalse(nodes.isEmpty());
     Assertions.assertEquals(2, nodes.size());
     Assertions.assertTrue(nodes.contains("http://localhost:8081"));

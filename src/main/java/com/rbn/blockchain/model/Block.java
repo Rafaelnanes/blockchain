@@ -1,8 +1,8 @@
 package com.rbn.blockchain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.rbn.blockchain.exception.InvalidBlockException;
 import lombok.Getter;
+import lombok.ToString;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.time.Instant;
@@ -12,10 +12,11 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 @Getter
+@ToString
 public class Block {
 
   public static final long MINE_RATE = 1000;
-  public static final int DEFAULT_DIFFICULTY = 2;
+  private static final int DEFAULT_DIFFICULTY = 2;
   private final String lastHash;
   private final String data;
   private final int difficulty;
@@ -24,26 +25,6 @@ public class Block {
   private final long effortTime;
   private final long nonce;
   private final String hash;
-
-  public Block(String lastHash,
-               String hash,
-               String data,
-               long nonce,
-               int difficulty,
-               long effortTime,
-               long timestamp) {
-    this.lastHash = lastHash;
-    this.data = data;
-    this.difficulty = difficulty;
-    this.timestamp = timestamp;
-    this.effortTime = effortTime;
-    this.nonce = nonce;
-    this.hash = hash;
-    String generatedHash = generateHash(lastHash, data, nonce, difficulty, effortTime, timestamp);
-    if (!generatedHash.equals(hash)) {
-      throw new InvalidBlockException();
-    }
-  }
 
   private Block(String lastHash,
                 String data,
@@ -64,29 +45,15 @@ public class Block {
   public static Block getGenesisBlock() {
     return new Block("lastGenesisHash",
         "genesisData",
-        -1,
+        DEFAULT_DIFFICULTY,
         -1,
         "d2b402d8ef34562e8c1391dd5cf0a0da1e902642a23965440953bbe4762b474e",
         0,
         System.currentTimeMillis());
   }
 
-  public static String generateHash(String lastHash,
-                                    String data,
-                                    long nonce,
-                                    int difficulty,
-                                    long effortTime,
-                                    long timestamp) {
-    return DigestUtils.sha256Hex(Stream.of(lastHash,
-                                           data,
-                                           String.valueOf(nonce),
-                                           String.valueOf(difficulty),
-                                           String.valueOf(effortTime),
-                                           String.valueOf(timestamp))
-                                       .reduce("", (a, b) -> String.format("%s %s", a, b)));
-  }
 
-  private static String proofOfWorkHash(String lastHash, String data, long nonce) {
+  public static String generateHash(String lastHash, String data, long nonce) {
     return DigestUtils.sha256Hex(Stream.of(lastHash,
                                            data,
                                            String.valueOf(nonce))
@@ -94,7 +61,7 @@ public class Block {
   }
 
   public static String generateHashToBinaryString(String lastHash, String data, long nonce) {
-    String s = proofOfWorkHash(lastHash, data, nonce);
+    String s = generateHash(lastHash, data, nonce);
     byte[] bytes = s.getBytes();
     StringBuilder binary = new StringBuilder();
     for (byte b : bytes) {
@@ -107,28 +74,27 @@ public class Block {
     return binary.toString();
   }
 
-  public static Block mine(String lastHash, String data) {
-    String proofOfWorkHash;
+  public static Block mine(String lastHash, String data, int difficulty) {
+    String finalHash;
     long nonce = 0;
     long effortTime;
     long initialTime = System.currentTimeMillis();
-    int difficulty = DEFAULT_DIFFICULTY;
+    difficulty++;
+    int maxDifficulty = 60;
     do {
       nonce++;
       effortTime = System.currentTimeMillis() - initialTime;
-      int maxDifficulty = 60;
       if (difficulty > maxDifficulty) {
         difficulty = maxDifficulty;
       }
-      if (effortTime >= Block.MINE_RATE && difficulty > 1) {
+      if (effortTime >= MINE_RATE && difficulty > 1) {
         difficulty--;
       } else {
         difficulty++;
       }
-      proofOfWorkHash = proofOfWorkHash(lastHash, data, nonce);
-    } while (!Objects.requireNonNull(proofOfWorkHash).matches(String.format("^\\d{%d}\\w*$", difficulty)));
+      finalHash = generateHash(lastHash, data, nonce);
+    } while (!Objects.requireNonNull(finalHash).matches(String.format("^\\d{%d}\\w*$", difficulty)));
     long timestamp = System.currentTimeMillis();
-    String finalHash = generateHash(lastHash, data, nonce, difficulty, effortTime, timestamp);
     return new Block(lastHash, data, difficulty, nonce, finalHash, effortTime, timestamp);
   }
 

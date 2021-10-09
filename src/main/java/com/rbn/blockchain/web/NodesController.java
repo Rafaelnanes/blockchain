@@ -26,12 +26,12 @@ public class NodesController {
 
   @PostMapping
   public Set<String> post(@RequestBody NodeRequest nodeRequest) {
-    return nodeService.register(nodeRequest.getNodeUrl());
+    return nodeService.registerBulk(nodeRequest.getNodeUrl());
   }
 
   @PostMapping("/bulk")
   public Set<String> registerBulk(@RequestBody List<String> nodesUrl) {
-    return nodeService.register(nodesUrl);
+    return nodeService.registerBulk(nodesUrl);
   }
 
 }

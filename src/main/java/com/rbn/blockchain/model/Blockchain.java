@@ -2,11 +2,13 @@ package com.rbn.blockchain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rbn.blockchain.exception.InvalidBlockException;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Slf4j
 public class Blockchain {
 
   private final List<Block> chain;
@@ -20,13 +22,11 @@ public class Blockchain {
     Block lastBlock = this.chain.get(this.chain.size() - 1);
     String generatedHash = Block.generateHash(lastBlock.getHash(),
         block.getData(),
-        block.getNonce(),
-        block.getDifficulty(),
-        block.getEffortTime(),
-        block.getTimestamp());
+        block.getNonce());
     boolean lastHashValid = block.getLastHash().equals(lastBlock.getHash());
-    boolean validProofOfWork =
-        generatedHash.equals(block.getHash());
+    boolean validProofOfWork = generatedHash.equals(block.getHash());
+    log.info("lastHashValid: {}", lastHashValid);
+    log.info("validProofOfWork: {}", validProofOfWork);
     if (lastHashValid && validProofOfWork) {
       this.chain.add(block);
     } else {
@@ -51,10 +51,7 @@ public class Blockchain {
       Block currentBlock = chain.get(i);
       String generatedHash = Block.generateHash(lastBlock.getHash(),
           currentBlock.getData(),
-          currentBlock.getNonce(),
-          currentBlock.getDifficulty(),
-          currentBlock.getEffortTime(),
-          currentBlock.getTimestamp());
+          currentBlock.getNonce());
       boolean wrongProofOfWork = !generatedHash.equals(currentBlock.getHash());
       boolean lastHashDoNotMatch = !currentBlock.getLastHash().equals(lastBlock.getHash());
       if (lastHashDoNotMatch || wrongProofOfWork) {

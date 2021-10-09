@@ -13,13 +13,13 @@ public class BlockTests {
   @Test
   @DisplayName("has a timestamp, lastHash, hash, and data property")
   void simpleCreation() {
-    var block = Block.mine("lastHash", "data");
+    var block = Block.mine("lastHash", "data", 2);
     assertTrue(block.getTimestamp() > 0);
     assertNotNull(block.getHash());
     assertEquals("lastHash", block.getLastHash());
     assertEquals(2, block.getNonce());
     assertEquals("data", block.getData());
-    assertEquals(4, block.getDifficulty());
+    assertTrue(block.getDifficulty() > 0);
   }
 
   @Test
@@ -31,20 +31,17 @@ public class BlockTests {
     assertEquals("lastGenesisHash", genesisBlock.getLastHash());
     assertEquals(-1, genesisBlock.getNonce());
     assertEquals("genesisData", genesisBlock.getData());
-    assertEquals(-1, genesisBlock.getDifficulty());
+    assertEquals(2, genesisBlock.getDifficulty());
   }
 
   @Test
   @DisplayName("mineBlock()")
   void mineBlock() {
     var genesisBlock = Block.getGenesisBlock();
-    var block = Block.mine(genesisBlock.getHash(), "data");
+    var block = Block.mine(genesisBlock.getHash(), "data", genesisBlock.getDifficulty());
     String generatedHash = Block.generateHash(genesisBlock.getHash(),
         "data",
-        block.getNonce(),
-        block.getDifficulty(),
-        block.getEffortTime(),
-        block.getTimestamp());
+        block.getNonce());
     assertEquals(generatedHash, block.getHash());
     assertTrue(block.getEffortTime() > 0);
   }

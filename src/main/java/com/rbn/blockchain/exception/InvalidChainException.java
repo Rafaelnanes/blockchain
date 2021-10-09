@@ -4,10 +4,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.FORBIDDEN)
-public class InvalidBlockException extends GenericException {
+public class InvalidChainException extends GenericException {
 
-  public InvalidBlockException() {
-    super("Invalid block");
+  public InvalidChainException() {
+    super("Invalid chain");
   }
 
 }
