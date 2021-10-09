@@ -1,6 +1,7 @@
 package test.com.rbn.blockchain;
 
 import com.rbn.blockchain.model.Block;
+import com.rbn.blockchain.util.Utils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -39,9 +40,9 @@ public class BlockTests {
   void mineBlock() {
     var genesisBlock = Block.getGenesisBlock();
     var block = Block.mine(genesisBlock.getHash(), "data", genesisBlock.getDifficulty());
-    String generatedHash = Block.generateHash(genesisBlock.getHash(),
+    String generatedHash = Utils.generateHash(genesisBlock.getHash(),
         "data",
-        block.getNonce());
+        String.valueOf(block.getNonce()));
     assertEquals(generatedHash, block.getHash());
     assertTrue(block.getEffortTime() > 0);
   }

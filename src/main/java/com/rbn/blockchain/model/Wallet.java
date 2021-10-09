@@ -1,6 +1,6 @@
 package com.rbn.blockchain.model;
 
-import com.rbn.blockchain.util.Secp256k1Utils;
+import com.rbn.blockchain.util.Utils;
 import lombok.SneakyThrows;
 import org.apache.commons.codec.binary.Hex;
 
@@ -25,22 +25,21 @@ public class Wallet {
   @SneakyThrows
   public Wallet(BigDecimal balance) {
     this.balance = balance;
-    KeyPair keyPair = Secp256k1Utils.getKeyPair();
+    KeyPair keyPair = Utils.getKeyPair();
     PublicKey pairPublic = keyPair.getPublic();
     this.publicKey = Hex.encodeHexString(pairPublic.getEncoded());
     this.privateKey = keyPair.getPrivate();
-    this.signature = Signature.getInstance("SHA256withECDSA");
+    this.signature = Signature.getInstance(Utils.SIGNATURE_INSTANCE);
     this.signature.initSign(this.privateKey);
   }
 
   @SneakyThrows
   public static boolean verify(String publicKeyHex, String data, String signatureHex) {
-    Signature signature = Signature.getInstance("SHA256withECDSA");
-    KeyFactory kf = KeyFactory.getInstance("EC");
+    Signature signature = Signature.getInstance(Utils.SIGNATURE_INSTANCE);
 
     EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(Hex.decodeHex(publicKeyHex));
 
-    KeyFactory keyFactory = KeyFactory.getInstance("EC");
+    KeyFactory keyFactory = KeyFactory.getInstance(Utils.KEY_PAIR_INSTANCE);
     PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
 
     signature.initVerify(publicKey);

@@ -1,15 +1,14 @@
 package com.rbn.blockchain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.rbn.blockchain.util.Utils;
 import lombok.Getter;
 import lombok.ToString;
-import org.apache.commons.codec.digest.DigestUtils;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 @Getter
 @ToString
@@ -52,14 +51,6 @@ public class Block {
         System.currentTimeMillis());
   }
 
-
-  public static String generateHash(String lastHash, String data, long nonce) {
-    return DigestUtils.sha256Hex(Stream.of(lastHash,
-                                           data,
-                                           String.valueOf(nonce))
-                                       .reduce("", (a, b) -> String.format("%s %s", a, b)));
-  }
-
   public static Block mine(String lastHash, String data, int difficulty) {
     String finalHash;
     long nonce = 0;
@@ -78,7 +69,7 @@ public class Block {
       } else {
         difficulty++;
       }
-      finalHash = generateHash(lastHash, data, nonce);
+      finalHash = Utils.generateHash(lastHash, data, String.valueOf(nonce));
     } while (!Objects.requireNonNull(finalHash).matches(String.format("^\\d{%d}\\w*$", difficulty)));
     long timestamp = System.currentTimeMillis();
     return new Block(lastHash, data, difficulty, nonce, finalHash, effortTime, timestamp);

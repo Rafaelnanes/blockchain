@@ -20,6 +20,17 @@ public class WalletTests {
   }
 
   @Test
+  void changedData() {
+    var wallet = new Wallet(new BigDecimal("20"));
+    String data = "anyData";
+    String signatureEncoded = wallet.sign(data);
+    boolean verify = Wallet.verify(wallet.getPublicKey(),
+        "data2",
+        signatureEncoded);
+    Assertions.assertFalse(verify);
+  }
+
+  @Test
   void wrongWalletVerify() {
     var wallet = new Wallet(new BigDecimal("20"));
     var wallet2 = new Wallet(new BigDecimal("20"));
