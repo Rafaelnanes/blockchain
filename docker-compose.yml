@@ -1,0 +1,24 @@
+version: '3.2'
+services:
+    server-8080:
+        container_name: server-8080
+        build:
+            dockerfile: Dockerfile
+            context: ./
+        ports:
+          - '8080:8080'
+        networks:
+            - simplenet
+        entrypoint: ["java","-Dserver.port=8080","-Dcurrent.host.url=server-8080","-jar","/app.jar"]
+    server-8081:
+        container_name: server-8081
+        build:
+            dockerfile: Dockerfile
+            context: ./
+        ports:
+          - '8081:8081'
+        networks:
+            - simplenet
+        entrypoint: ["java","-Dserver.port=8081","-Dcurrent.host.url=server-8081","-jar","/app.jar"]
+networks:
+    simplenet:

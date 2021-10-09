@@ -3,8 +3,10 @@ package com.rbn.blockchain.service;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +14,6 @@ import java.net.URI;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Getter
@@ -24,42 +25,57 @@ public class DefaultNodeService {
   @Autowired
   private HttpServletRequest httpServletRequest;
 
+  @Autowired
+  private RestTemplate restTemplate;
+
+  @Value("${current.host.url: }")
+  private String currentHostUrl;
+
   public Set<String> register(String nodeUrl) {
     String currentServerName = getServerUrl();
     if (nodeUrl.equals(currentServerName)) {
+      log.info("Cannot self register: {}", nodeUrl);
       return nodes;
     }
-    nodes.add(nodeUrl);
-    registerBroadcast();
+
+    if (nodes.contains(nodeUrl)) {
+      log.info("Node already exists: {}", nodeUrl);
+      return nodes;
+    }
+    registerBroadcast(nodeUrl);
+    log.info("Nodes registered: {}", nodes);
     return nodes;
   }
 
   public Set<String> register(List<String> nodesUrl) {
-    Set<String> collect = nodesUrl.stream()
-                                  .filter(x -> !x.equals(getServerUrl()))
-                                  .collect(Collectors.toSet());
-    nodes.addAll(collect);
+    nodesUrl.forEach(this::register);
     return nodes;
   }
 
-  private void registerBroadcast() {
-    Set<String> collect = new HashSet<>(nodes);
-    collect.add(getServerUrl());
+  private void registerBroadcast(String nodeUrl) {
+    nodes.add(nodeUrl);
     for (String node : nodes) {
       try {
+        HashSet<String> allNodes = new HashSet<>(nodes);
+        allNodes.add(getServerUrl());
+
         String url = node + "/nodes/bulk";
         ResponseEntity<Void> voidResponseEntity =
-            new RestTemplate().postForEntity(URI.create(url), collect, Void.class);
+            restTemplate.postForEntity(URI.create(url), allNodes, Void.class);
         log.info("Requesting to: {}, Response: {}", url, voidResponseEntity.getStatusCode());
       } catch (Exception e) {
         log.warn("Error registering node: {}: {}", node, e.getMessage());
+        nodes.remove(node);
       }
     }
-
   }
 
   private String getServerUrl() {
-    return String.format("http://%s:%d", httpServletRequest.getServerName(), httpServletRequest.getServerPort());
+    String finalHostUrl = StringUtils.hasText(currentHostUrl) ? currentHostUrl : httpServletRequest.getServerName();
+    String currentServerUrl =
+        String.format("http://%s:%d", finalHostUrl, httpServletRequest.getServerPort());
+    log.info("Final host url: {}", finalHostUrl);
+    return currentServerUrl;
   }
 
 }
