@@ -1,28 +1,46 @@
 package com.rbn.blockchain.hash;
 
+import org.apache.commons.codec.binary.Hex;
+
+import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.Signature;
 import java.security.spec.ECGenParameterSpec;
+import java.util.Base64;
 
 public class Main {
 
   public static void main(String[] args) {
     System.out.println("Java Version: " + getJavaVersion());
     try {
-      KeyPairGenerator kpg;
-      kpg = KeyPairGenerator.getInstance("EC");
-      ECGenParameterSpec ecsp;
-      ecsp = new ECGenParameterSpec("secp256k1");
+      KeyPairGenerator kpg = KeyPairGenerator.getInstance("EC");
+      ECGenParameterSpec ecsp = new ECGenParameterSpec("secp256k1");
+      //      SecureRandom secureRandom = new SecureRandom();
+      //      kpg.initialize(ecsp, secureRandom);
       kpg.initialize(ecsp);
 
       KeyPair kp = kpg.genKeyPair();
       PrivateKey privKey = kp.getPrivate();
       PublicKey pubKey = kp.getPublic();
+      System.out.println(Hex.encodeHexString(pubKey.getEncoded()));
+      //System.out.println(Base64.getEncoder().encodeToString(pubKey.getEncoded()));
+      Signature signature = Signature.getInstance("SHA256withECDSA");
+      signature.initSign(privKey);
+      signature.update("aaa".getBytes(StandardCharsets.UTF_8));
+      byte[] sign = signature.sign();
+      String hexString = Hex.encodeHexString(Base64.getEncoder().encodeToString(sign).getBytes());
+      System.out.println("Signed: " + hexString);
 
-      System.out.println(privKey.toString());
-      System.out.println(pubKey.toString());
+      byte[] signDecoded = Base64.getDecoder().decode(Hex.decodeHex(hexString));
+      System.out.println("Hex decode: " + signDecoded);
+      signature.initVerify(pubKey);
+      signature.update("aaa".getBytes(StandardCharsets.UTF_8));
+      boolean isVerified = signature.verify(signDecoded);
+      System.out.println("isVerified: " + isVerified);
+
     } catch (Exception ex) {
       System.out.println(ex);
     }

@@ -60,20 +60,6 @@ public class Block {
                                        .reduce("", (a, b) -> String.format("%s %s", a, b)));
   }
 
-  public static String generateHashToBinaryString(String lastHash, String data, long nonce) {
-    String s = generateHash(lastHash, data, nonce);
-    byte[] bytes = s.getBytes();
-    StringBuilder binary = new StringBuilder();
-    for (byte b : bytes) {
-      int val = b;
-      for (int i = 0; i < 8; i++) {
-        binary.append((val & 128) == 0 ? 0 : 1);
-        val <<= 1;
-      }
-    }
-    return binary.toString();
-  }
-
   public static Block mine(String lastHash, String data, int difficulty) {
     String finalHash;
     long nonce = 0;
