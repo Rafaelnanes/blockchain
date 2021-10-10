@@ -13,7 +13,7 @@ public class BlockchainTests {
 
   @Test
   @DisplayName("create a new block")
-  void simpleCreation() throws InvalidBlockException {
+  void simple_creation() throws InvalidBlockException {
     //given
     Blockchain blockchain = new Blockchain();
     var lastBlock = blockchain.getLastBlock();
@@ -35,7 +35,7 @@ public class BlockchainTests {
 
   @Test
   @DisplayName("replace chain")
-  void replaceChain() throws InvalidBlockException {
+  void replace_chain() throws InvalidBlockException {
     //given
     Blockchain firstBlockChain = getBlockchainWith3Blocks();
     Blockchain secondBlockChain = getBlockChainWith2Blocks();
@@ -50,7 +50,7 @@ public class BlockchainTests {
 
   @Test
   @DisplayName("cannot replace smaller chain")
-  void doNotReplaceChain() throws InvalidBlockException {
+  void do_not_replace_chain() throws InvalidBlockException {
     //given
     Blockchain firstBlockChain = getBlockChainWith2Blocks();
     Blockchain secondBlockChain = getBlockchainWith3Blocks();

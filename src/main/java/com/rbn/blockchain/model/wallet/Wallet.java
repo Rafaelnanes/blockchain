@@ -1,5 +1,6 @@
-package com.rbn.blockchain.model;
+package com.rbn.blockchain.model.wallet;
 
+import com.rbn.blockchain.exception.AmountExceedsBalanceException;
 import com.rbn.blockchain.util.Utils;
 import lombok.SneakyThrows;
 import org.apache.commons.codec.binary.Hex;
@@ -45,6 +46,13 @@ public class Wallet {
     signature.initVerify(publicKey);
     signature.update(data.getBytes(StandardCharsets.UTF_8));
     return signature.verify(Base64.getDecoder().decode(Hex.decodeHex(signatureHex)));
+  }
+
+  public Transaction createTransaction(String recipientPublicKey, BigDecimal amount) {
+    if (this.balance.compareTo(amount) < 0) {
+      throw new AmountExceedsBalanceException(amount);
+    }
+    return new Transaction(this, recipientPublicKey, amount);
   }
 
   @SneakyThrows

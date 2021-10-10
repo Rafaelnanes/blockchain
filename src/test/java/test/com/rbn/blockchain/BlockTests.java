@@ -13,7 +13,7 @@ public class BlockTests {
 
   @Test
   @DisplayName("has a timestamp, lastHash, hash, and data property")
-  void simpleCreation() {
+  void simple_creation() {
     var block = Block.mine("lastHash", "data", 2);
     assertTrue(block.getTimestamp() > 0);
     assertNotNull(block.getHash());
@@ -25,7 +25,7 @@ public class BlockTests {
 
   @Test
   @DisplayName("getGenesisBlock()")
-  void getGenesisBlock() {
+  void get_genesis_block() {
     var genesisBlock = Block.getGenesisBlock();
     assertTrue(genesisBlock.getTimestamp() > 0);
     assertEquals("d2b402d8ef34562e8c1391dd5cf0a0da1e902642a23965440953bbe4762b474e", genesisBlock.getHash());
@@ -37,7 +37,7 @@ public class BlockTests {
 
   @Test
   @DisplayName("mineBlock()")
-  void mineBlock() {
+  void mine_block() {
     var genesisBlock = Block.getGenesisBlock();
     var block = Block.mine(genesisBlock.getHash(), "data", genesisBlock.getDifficulty());
     String generatedHash = Utils.generateHash(genesisBlock.getHash(),

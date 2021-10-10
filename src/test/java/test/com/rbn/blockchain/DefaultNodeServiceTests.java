@@ -30,7 +30,7 @@ public class DefaultNodeServiceTests {
   private DefaultNodeService defaultNodeService;
 
   @Test
-  void simpleCreation() {
+  void simple_creation() {
     defaultNodeService.registerBulk("http://localhost:8081");
     defaultNodeService.registerBulk("http://localhost:8082");
     Set<String> nodes = defaultNodeService.registerBulk("http://localhost:80");

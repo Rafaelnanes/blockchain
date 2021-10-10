@@ -1,6 +1,6 @@
 package test.com.rbn.blockchain;
 
-import com.rbn.blockchain.model.Wallet;
+import com.rbn.blockchain.model.wallet.Wallet;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 public class WalletTests {
 
   @Test
-  void correctWalletVerify() {
+  void valid_wallet_verify() {
     var wallet = new Wallet(new BigDecimal("20"));
     String data = "anyData";
     String signatureEncoded = wallet.sign(data);
@@ -20,7 +20,7 @@ public class WalletTests {
   }
 
   @Test
-  void changedData() {
+  void changed_data() {
     var wallet = new Wallet(new BigDecimal("20"));
     String data = "anyData";
     String signatureEncoded = wallet.sign(data);
@@ -31,7 +31,7 @@ public class WalletTests {
   }
 
   @Test
-  void wrongWalletVerify() {
+  void invalid_wallet_verify() {
     var wallet = new Wallet(new BigDecimal("20"));
     var wallet2 = new Wallet(new BigDecimal("20"));
     String data = "anyData";
