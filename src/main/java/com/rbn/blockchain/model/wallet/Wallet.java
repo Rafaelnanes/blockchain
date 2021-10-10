@@ -20,7 +20,7 @@ public class Wallet {
 
   private final BigDecimal balance;
   private final String publicKey;
-  private final PrivateKey privateKey;
+  private final String privateKey;
   private final Signature signature;
 
   @SneakyThrows
@@ -29,9 +29,21 @@ public class Wallet {
     KeyPair keyPair = Utils.getKeyPair();
     PublicKey pairPublic = keyPair.getPublic();
     this.publicKey = Hex.encodeHexString(pairPublic.getEncoded());
-    this.privateKey = keyPair.getPrivate();
+    PrivateKey pairPrivate = keyPair.getPrivate();
+    this.privateKey = Hex.encodeHexString(pairPrivate.getEncoded());
     this.signature = Signature.getInstance(Utils.SIGNATURE_INSTANCE);
-    this.signature.initSign(this.privateKey);
+    this.signature.initSign(pairPrivate);
+  }
+
+  @SneakyThrows
+  public Wallet(String privateKey, String publicKey) {
+    this.balance = BigDecimal.ZERO; //TODO I think I need to get it from blockchain
+    PrivateKey pairPrivate = Utils.retrievePrivateKey(privateKey);
+    PublicKey pairPublic = Utils.retrievePublicKey(publicKey);
+    this.publicKey = Hex.encodeHexString(pairPublic.getEncoded());
+    this.privateKey = Hex.encodeHexString(pairPrivate.getEncoded());
+    this.signature = Signature.getInstance(Utils.SIGNATURE_INSTANCE);
+    this.signature.initSign(pairPrivate);
   }
 
   @SneakyThrows
@@ -40,7 +52,7 @@ public class Wallet {
 
     EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(Hex.decodeHex(publicKeyHex));
 
-    KeyFactory keyFactory = KeyFactory.getInstance(Utils.KEY_PAIR_INSTANCE);
+    KeyFactory keyFactory = KeyFactory.getInstance(Utils.ALGORITHM);
     PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
 
     signature.initVerify(publicKey);
@@ -68,6 +80,10 @@ public class Wallet {
 
   public String getPublicKey() {
     return this.publicKey;
+  }
+
+  public String getPrivateKey() {
+    return this.privateKey;
   }
 
 }

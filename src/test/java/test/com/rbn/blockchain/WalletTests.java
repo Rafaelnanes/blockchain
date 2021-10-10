@@ -42,4 +42,18 @@ public class WalletTests {
     Assertions.assertFalse(verify);
   }
 
+  @Test
+  void retrieve_wallet_from_privateKey_encoded() throws Exception {
+    var wallet1 = new Wallet(new BigDecimal("20"));
+    String data = "anyData";
+    String signedData = wallet1.sign(data);
+    Wallet sameWallet1 = new Wallet(wallet1.getPrivateKey(), wallet1.getPublicKey());
+    Assertions.assertEquals(wallet1.getPublicKey(), sameWallet1.getPublicKey());
+    Assertions.assertEquals(wallet1.getPrivateKey(), sameWallet1.getPrivateKey());
+    boolean verifyWallet1 = Wallet.verify(wallet1.getPublicKey(), data, signedData);
+    Assertions.assertTrue(verifyWallet1);
+    boolean verifySameWallet1 = Wallet.verify(sameWallet1.getPublicKey(), data, signedData);
+    Assertions.assertTrue(verifySameWallet1);
+  }
+
 }
