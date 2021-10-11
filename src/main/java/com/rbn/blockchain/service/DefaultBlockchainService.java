@@ -5,7 +5,6 @@ import com.rbn.blockchain.model.Block;
 import com.rbn.blockchain.model.Blockchain;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -15,10 +14,14 @@ import javax.annotation.PostConstruct;
 @Service
 public class DefaultBlockchainService {
 
-  private final Blockchain blockchain = new Blockchain();
+  private final Blockchain blockchain;
 
-  @Autowired
-  private DefaultNodeService broadcastService;
+  private final DefaultNodeService broadcastService;
+
+  public DefaultBlockchainService(DefaultNodeService defaultNodeService) {
+    this.broadcastService = defaultNodeService;
+    this.blockchain = new Blockchain();
+  }
 
   @PostConstruct
   public void init() {

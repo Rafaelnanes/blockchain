@@ -18,10 +18,10 @@ import java.util.Base64;
 
 public class Wallet {
 
-  private final BigDecimal balance;
   private final String publicKey;
   private final String privateKey;
   private final Signature signature;
+  private BigDecimal balance;
 
   @SneakyThrows
   public Wallet(BigDecimal balance) {
@@ -37,7 +37,7 @@ public class Wallet {
 
   @SneakyThrows
   public Wallet(String privateKey, String publicKey) {
-    this.balance = BigDecimal.ZERO; //TODO I think I need to get it from blockchain
+    this.balance = BigDecimal.valueOf(100); //TODO I think I need to get it from blockchain
     PrivateKey pairPrivate = Utils.retrievePrivateKey(privateKey);
     PublicKey pairPublic = Utils.retrievePublicKey(publicKey);
     this.publicKey = Hex.encodeHexString(pairPublic.getEncoded());
@@ -61,9 +61,10 @@ public class Wallet {
   }
 
   public Transaction createTransaction(String recipientPublicKey, BigDecimal amount) {
-    if (this.balance.compareTo(amount) < 0) {
+    if (!hasBalance(amount)) {
       throw new AmountExceedsBalanceException(amount);
     }
+    this.balance = this.balance.subtract(amount);
     return new Transaction(this, recipientPublicKey, amount);
   }
 
@@ -72,6 +73,10 @@ public class Wallet {
     this.signature.update(data.getBytes(StandardCharsets.UTF_8));
     byte[] sign = this.signature.sign();
     return Hex.encodeHexString(Base64.getEncoder().encodeToString(sign).getBytes());
+  }
+
+  boolean hasBalance(BigDecimal amount) {
+    return balance.compareTo(amount) >= 0;
   }
 
   public BigDecimal getBalance() {

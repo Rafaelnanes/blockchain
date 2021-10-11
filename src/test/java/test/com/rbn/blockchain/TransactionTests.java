@@ -38,7 +38,7 @@ public class TransactionTests {
     Map<String, BigDecimal> outputMap = transaction1.getOutputMap();
     Map<String, BigDecimal> outputMap2 = transaction2.getOutputMap();
     assertEquals(new BigDecimal(40), outputMap.get(senderWallet.getPublicKey()));
-    assertEquals(new BigDecimal(40), outputMap2.get(senderWallet.getPublicKey()));
+    assertEquals(new BigDecimal(30), outputMap2.get(senderWallet.getPublicKey()));
     Assertions.assertNotEquals(transaction1.getInputMap().getSignature(), transaction2.getInputMap().getSignature());
   }
 
@@ -58,6 +58,15 @@ public class TransactionTests {
     var recipientWallet = new Wallet(new BigDecimal(20));
     Assertions.assertThrows(AmountExceedsBalanceException.class,
         () -> senderWallet.createTransaction(recipientWallet.getPublicKey(), new BigDecimal("50.1")));
+  }
+
+  @Test
+  void update_balance_exceeds() {
+    var senderWallet = new Wallet(new BigDecimal(50));
+    var recipientWallet = new Wallet(new BigDecimal(20));
+    senderWallet.createTransaction(recipientWallet.getPublicKey(), new BigDecimal(40));
+    Assertions.assertThrows(AmountExceedsBalanceException.class,
+        () -> senderWallet.createTransaction(recipientWallet.getPublicKey(), new BigDecimal(20)));
   }
 
 }

@@ -14,9 +14,12 @@ public class Blockchain {
 
   private final List<Block> chain;
 
+  private final TransactionPool transactionPool;
+
   public Blockchain() {
-    chain = new ArrayList<>();
-    chain.add(Block.getGenesisBlock());
+    this.chain = new ArrayList<>();
+    this.transactionPool = new TransactionPool();
+    this.chain.add(Block.getGenesisBlock());
   }
 
   public void addBlock(Block block) throws InvalidBlockException {
@@ -42,6 +45,10 @@ public class Blockchain {
 
   public List<Block> getChain() {
     return Collections.unmodifiableList(chain);
+  }
+
+  public TransactionPool getTransactionPool() {
+    return this.transactionPool;
   }
 
   @JsonIgnore
