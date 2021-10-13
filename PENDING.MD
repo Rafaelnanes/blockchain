@@ -1,9 +1,9 @@
 ### Missing tasks
 
-- add index to blockchain and add it to encrypt
+- Add a wallet in genesis block
 - Improve tutorial
-- Retrieve KeyPair only using privateKey encoded
 - Mining race
+    - After mine a block, delete all transactions that exist in the pool
 - Use junit and create 3 instances of DefaultBlockChainService
 
 ### Wallet

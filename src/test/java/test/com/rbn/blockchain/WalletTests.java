@@ -2,6 +2,7 @@ package test.com.rbn.blockchain;
 
 import com.rbn.blockchain.model.wallet.Wallet;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -20,6 +21,7 @@ public class WalletTests {
   }
 
   @Test
+  @DisplayName("False signature cuz of changed data")
   void changed_data() {
     var wallet = new Wallet(new BigDecimal("20"));
     String data = "anyData";
@@ -31,6 +33,7 @@ public class WalletTests {
   }
 
   @Test
+  @DisplayName("False signature cuz of different wallet")
   void invalid_wallet_verify() {
     var wallet = new Wallet(new BigDecimal("20"));
     var wallet2 = new Wallet(new BigDecimal("20"));

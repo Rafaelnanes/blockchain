@@ -4,25 +4,20 @@ import com.rbn.blockchain.service.DefaultNodeService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.web.client.RestTemplate;
+import test.com.rbn.blockchain.util.ConfigTests;
 
-import javax.servlet.http.HttpServletRequest;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-@ContextConfiguration(classes = DefaultNodeServiceTests.Config.class)
+@Configuration
+@Import({DefaultNodeService.class})
+@ContextConfiguration(classes = ConfigTests.class)
 @ExtendWith(SpringExtension.class)
 public class DefaultNodeServiceTests {
 
@@ -51,26 +46,6 @@ public class DefaultNodeServiceTests {
     Assertions.assertEquals(2, nodes.size());
     Assertions.assertTrue(nodes.contains("http://localhost:8081"));
     Assertions.assertTrue(nodes.contains("http://localhost:8082"));
-  }
-
-  @Configuration
-  @Import(DefaultNodeService.class)
-  public static class Config {
-
-    @Bean
-    public HttpServletRequest getHttpServletRequest() {
-      return new MockHttpServletRequest();
-    }
-
-    @Bean
-    public RestTemplate getRestTemplate() {
-      RestTemplate restTemplate = Mockito.mock(RestTemplate.class);
-      ResponseEntity<Object> responseEntity = new ResponseEntity<>(HttpStatus.OK);
-      Mockito.when(restTemplate.postForEntity(Mockito.any(URI.class), Mockito.any(Set.class), Mockito.any()))
-             .thenReturn(responseEntity);
-      return restTemplate;
-    }
-
   }
 
 }

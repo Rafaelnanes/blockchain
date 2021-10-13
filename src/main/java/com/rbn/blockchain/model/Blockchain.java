@@ -29,8 +29,6 @@ public class Blockchain {
         String.valueOf(block.getNonce()));
     boolean lastHashValid = block.getLastHash().equals(lastBlock.getHash());
     boolean validProofOfWork = generatedHash.equals(block.getHash());
-    log.info("lastHashValid: {}", lastHashValid);
-    log.info("validProofOfWork: {}", validProofOfWork);
     if (lastHashValid && validProofOfWork) {
       this.chain.add(block);
     } else {
