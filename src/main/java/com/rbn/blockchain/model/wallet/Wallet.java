@@ -81,6 +81,10 @@ public class Wallet {
     return Hex.encodeHexString(Base64.getEncoder().encodeToString(sign).getBytes());
   }
 
+  public void updateBalance(Blockchain blockchain) {
+    this.balance = blockchain.getBalance(publicKey);
+  }
+
   boolean hasBalance(BigDecimal amount) {
     return balance.compareTo(amount) >= 0;
   }
