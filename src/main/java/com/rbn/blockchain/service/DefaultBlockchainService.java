@@ -1,14 +1,15 @@
 package com.rbn.blockchain.service;
 
 import com.rbn.blockchain.exception.NotFoundException;
-import com.rbn.blockchain.model.Block;
 import com.rbn.blockchain.model.Blockchain;
+import com.rbn.blockchain.model.wallet.Block;
+import com.rbn.blockchain.model.wallet.Transaction;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Getter
@@ -48,11 +49,11 @@ public class DefaultBlockchainService {
     log.info("Added block: {}", block);
   }
 
-  public Block mine(String data) {
+  public Block mine(List<Transaction> data) {
     log.info("Mining block");
     Block lastBlock = blockchain.getLastBlock();
     Block blockMined = Block.mine(lastBlock.getHash(),
-        new ArrayList<>(),
+        data,
         lastBlock.getDifficulty());
 
     log.info("Broadcasting mined block");

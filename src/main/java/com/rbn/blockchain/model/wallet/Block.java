@@ -1,8 +1,6 @@
-package com.rbn.blockchain.model;
+package com.rbn.blockchain.model.wallet;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.rbn.blockchain.model.wallet.Transaction;
-import com.rbn.blockchain.model.wallet.Wallet;
 import com.rbn.blockchain.util.Utils;
 import lombok.Getter;
 import lombok.ToString;
@@ -49,8 +47,8 @@ public class Block {
   public static Block getGenesisBlock() {
     String genesisPublicKey =
         "3056301006072a8648ce3d020106052b8104000a034200046321eefa7bbc34d4b12177ac0720bded7da9a042219b93a8a290d30abdfcaa00f9257d131aae1c11dd28ca369f5e8e3b9ab527570ee8f1637e9a61d3b4638ba9";
-    var wallet = new Wallet(new BigDecimal(1000));
-    var transaction = wallet.createTransaction(genesisPublicKey, new BigDecimal(1000));
+    var wallet = new Wallet();
+    var transaction = wallet.createGenesisTransaction(genesisPublicKey, new BigDecimal(1000));
     List<Transaction> list = new ArrayList<>();
     list.add(transaction);
     return new Block("lastGenesisHash",

@@ -1,17 +1,16 @@
 package test.com.rbn.blockchain;
 
+import com.rbn.blockchain.model.Blockchain;
 import com.rbn.blockchain.model.wallet.Wallet;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
-
 public class WalletTests {
 
   @Test
   void valid_wallet_verify() {
-    var wallet = new Wallet(new BigDecimal("20"));
+    var wallet = new Wallet();
     String data = "anyData";
     String signatureEncoded = wallet.sign(data);
     boolean verify = Wallet.verify(wallet.getPublicKey(),
@@ -23,7 +22,7 @@ public class WalletTests {
   @Test
   @DisplayName("False signature cuz of changed data")
   void changed_data() {
-    var wallet = new Wallet(new BigDecimal("20"));
+    var wallet = new Wallet();
     String data = "anyData";
     String signatureEncoded = wallet.sign(data);
     boolean verify = Wallet.verify(wallet.getPublicKey(),
@@ -35,8 +34,8 @@ public class WalletTests {
   @Test
   @DisplayName("False signature cuz of different wallet")
   void invalid_wallet_verify() {
-    var wallet = new Wallet(new BigDecimal("20"));
-    var wallet2 = new Wallet(new BigDecimal("20"));
+    var wallet = new Wallet();
+    var wallet2 = new Wallet();
     String data = "anyData";
     String signatureEncoded = wallet.sign(data);
     boolean verify = Wallet.verify(wallet2.getPublicKey(),
@@ -47,10 +46,10 @@ public class WalletTests {
 
   @Test
   void retrieve_wallet_from_privateKey_encoded() throws Exception {
-    var wallet1 = new Wallet(new BigDecimal("20"));
+    var wallet1 = new Wallet();
     String data = "anyData";
     String signedData = wallet1.sign(data);
-    Wallet sameWallet1 = new Wallet(wallet1.getPrivateKey(), wallet1.getPublicKey());
+    Wallet sameWallet1 = new Wallet(wallet1.getPrivateKey(), wallet1.getPublicKey(), new Blockchain());
     Assertions.assertEquals(wallet1.getPublicKey(), sameWallet1.getPublicKey());
     Assertions.assertEquals(wallet1.getPrivateKey(), sameWallet1.getPrivateKey());
     boolean verifyWallet1 = Wallet.verify(wallet1.getPublicKey(), data, signedData);

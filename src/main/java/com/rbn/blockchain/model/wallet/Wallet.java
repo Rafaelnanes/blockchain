@@ -1,6 +1,7 @@
 package com.rbn.blockchain.model.wallet;
 
 import com.rbn.blockchain.exception.AmountExceedsBalanceException;
+import com.rbn.blockchain.model.Blockchain;
 import com.rbn.blockchain.util.Utils;
 import lombok.SneakyThrows;
 import org.apache.commons.codec.binary.Hex;
@@ -24,8 +25,8 @@ public class Wallet {
   private BigDecimal balance;
 
   @SneakyThrows
-  public Wallet(BigDecimal balance) {
-    this.balance = balance;
+  public Wallet() {
+    this.balance = BigDecimal.ZERO;
     KeyPair keyPair = Utils.getKeyPair();
     PublicKey pairPublic = keyPair.getPublic();
     this.publicKey = Hex.encodeHexString(pairPublic.getEncoded());
@@ -36,14 +37,14 @@ public class Wallet {
   }
 
   @SneakyThrows
-  public Wallet(String privateKey, String publicKey) {
-    this.balance = BigDecimal.valueOf(100); //TODO I think I need to get it from blockchain
+  public Wallet(String privateKey, String publicKey, Blockchain blockchain) {
     PrivateKey pairPrivate = Utils.retrievePrivateKey(privateKey);
     PublicKey pairPublic = Utils.retrievePublicKey(publicKey);
     this.publicKey = Hex.encodeHexString(pairPublic.getEncoded());
     this.privateKey = Hex.encodeHexString(pairPrivate.getEncoded());
     this.signature = Signature.getInstance(Utils.SIGNATURE_INSTANCE);
     this.signature.initSign(pairPrivate);
+    this.balance = blockchain.getBalance(publicKey);
   }
 
   @SneakyThrows
@@ -64,6 +65,11 @@ public class Wallet {
     if (!hasBalance(amount)) {
       throw new AmountExceedsBalanceException(amount);
     }
+    this.balance = this.balance.subtract(amount);
+    return new Transaction(this, recipientPublicKey, amount);
+  }
+
+  Transaction createGenesisTransaction(String recipientPublicKey, BigDecimal amount) {
     this.balance = this.balance.subtract(amount);
     return new Transaction(this, recipientPublicKey, amount);
   }

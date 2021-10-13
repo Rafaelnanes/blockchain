@@ -2,9 +2,12 @@ package com.rbn.blockchain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rbn.blockchain.exception.InvalidBlockException;
+import com.rbn.blockchain.model.wallet.Block;
+import com.rbn.blockchain.model.wallet.Transaction;
 import com.rbn.blockchain.util.Utils;
 import lombok.extern.slf4j.Slf4j;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -76,6 +79,23 @@ public class Blockchain {
       this.chain.addAll(localChain);
     }
     return this;
+  }
+
+  public BigDecimal getBalance(String publicKey) {
+    BigDecimal amount = BigDecimal.ZERO;
+    for (Block block : this.chain) {
+      for (Transaction transaction : block.getData()) {
+        if (!transaction.getOutputMap().containsKey(publicKey)) {
+          continue;
+        }
+        if (transaction.getInputMap().getAddress().equals(publicKey)) {
+          amount = transaction.getOutputMap().get(publicKey);
+        } else {
+          amount = amount.add(transaction.getOutputMap().get(publicKey));
+        }
+      }
+    }
+    return amount;
   }
 
 }

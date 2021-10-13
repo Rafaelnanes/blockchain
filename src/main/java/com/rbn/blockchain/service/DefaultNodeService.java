@@ -1,7 +1,7 @@
 package com.rbn.blockchain.service;
 
-import com.rbn.blockchain.model.Block;
 import com.rbn.blockchain.model.Blockchain;
+import com.rbn.blockchain.model.wallet.Block;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

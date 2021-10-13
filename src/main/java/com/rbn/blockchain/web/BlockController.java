@@ -1,8 +1,9 @@
 package com.rbn.blockchain.web;
 
 import com.rbn.blockchain.exception.NotFoundException;
-import com.rbn.blockchain.model.Block;
 import com.rbn.blockchain.model.Blockchain;
+import com.rbn.blockchain.model.wallet.Block;
+import com.rbn.blockchain.model.wallet.Transaction;
 import com.rbn.blockchain.service.DefaultBlockchainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,7 +42,7 @@ public class BlockController {
   }
 
   @PostMapping("/mine")
-  public Block mine(@RequestBody String data) {
+  public Block mine(@RequestBody List<Transaction> data) {
     return blockchainService.mine(data);
   }
 

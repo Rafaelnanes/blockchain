@@ -1,27 +1,16 @@
 package test.com.rbn.blockchain;
 
 import com.rbn.blockchain.exception.InvalidBlockException;
-import com.rbn.blockchain.model.Block;
 import com.rbn.blockchain.model.Blockchain;
-import com.rbn.blockchain.service.DefaultNodeService;
+import com.rbn.blockchain.model.wallet.Block;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import test.com.rbn.blockchain.util.ConfigTests;
 
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Configuration
-@ContextConfiguration(classes = BlockchainTests.InternalConfig.class)
-@ExtendWith(SpringExtension.class)
 public class BlockchainTests {
 
   @Test
@@ -92,15 +81,6 @@ public class BlockchainTests {
     Block block2 = Block.mine(block.getHash(), new ArrayList<>(), block.getDifficulty());
     firstBlockChain.addBlock(block2);
     return firstBlockChain;
-  }
-
-  @Configuration
-  static class InternalConfig extends ConfigTests {
-
-    @Bean
-    public DefaultNodeService getDefaultNodeService() {
-      return Mockito.mock(DefaultNodeService.class);
-    }
   }
 
 }

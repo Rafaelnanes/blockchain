@@ -6,6 +6,7 @@ import com.rbn.blockchain.model.wallet.Transaction;
 import com.rbn.blockchain.model.wallet.Wallet;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import test.com.rbn.blockchain.util.TestUtils;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -16,8 +17,8 @@ public class TransactionPoolTests {
   void add_one_transaction() {
     // given
     Blockchain blockchain = new Blockchain();
-    var senderWallet = new Wallet(new BigDecimal(50));
-    var recipientWallet = new Wallet(new BigDecimal(20));
+    var senderWallet = TestUtils.satoshiNakamotoWallet(blockchain);
+    var recipientWallet = new Wallet();
 
     // when
     var transaction = senderWallet.createTransaction(recipientWallet.getPublicKey(), new BigDecimal(10));
@@ -29,15 +30,15 @@ public class TransactionPoolTests {
     Optional<Transaction> existingTransaction = transactionPool.getExistingTransaction(transaction);
     Assertions.assertTrue(existingTransaction.isPresent());
     Assertions.assertEquals(transaction, existingTransaction.get());
-    Assertions.assertEquals(new BigDecimal(40), senderWallet.getBalance());
+    Assertions.assertEquals(new BigDecimal(990), senderWallet.getBalance());
   }
 
   @Test
   void add_two_transactions_same_wallet() {
     // given
     Blockchain blockchain = new Blockchain();
-    var senderWallet = new Wallet(new BigDecimal(50));
-    var recipientWallet = new Wallet(new BigDecimal(20));
+    var senderWallet = TestUtils.satoshiNakamotoWallet(blockchain);
+    var recipientWallet = new Wallet();
     var transaction = senderWallet.createTransaction(recipientWallet.getPublicKey(), new BigDecimal(10));
 
     // when
@@ -55,9 +56,9 @@ public class TransactionPoolTests {
   void update_transaction() {
     // given
     Blockchain blockchain = new Blockchain();
-    var senderWallet = new Wallet(new BigDecimal(50));
-    var recipientWallet = new Wallet(new BigDecimal(20));
-    var recipient2Wallet = new Wallet(new BigDecimal(30));
+    var senderWallet = TestUtils.satoshiNakamotoWallet(blockchain);
+    var recipientWallet = new Wallet();
+    var recipient2Wallet = new Wallet();
     var transaction = senderWallet.createTransaction(recipientWallet.getPublicKey(), new BigDecimal(10));
     var transaction2 = senderWallet.createTransaction(recipient2Wallet.getPublicKey(), new BigDecimal(10));
     var transaction3 = senderWallet.createTransaction(recipient2Wallet.getPublicKey(), new BigDecimal(5));
@@ -83,7 +84,7 @@ public class TransactionPoolTests {
             finalTransaction.getInputMap().getSignature()));
 
     // assert outputMap
-    Assertions.assertEquals(new BigDecimal(25), finalTransaction.getOutputMap().get(senderWalletPublicKey));
+    Assertions.assertEquals(new BigDecimal(975), finalTransaction.getOutputMap().get(senderWalletPublicKey));
     Assertions.assertEquals(new BigDecimal(10), finalTransaction.getOutputMap().get(recipientWallet.getPublicKey()));
     Assertions.assertEquals(new BigDecimal(15), finalTransaction.getOutputMap().get(recipient2Wallet.getPublicKey()));
 
