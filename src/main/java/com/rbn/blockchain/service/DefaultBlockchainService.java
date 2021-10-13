@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.List;
+import java.util.ArrayList;
 
 @Slf4j
 @Getter
@@ -49,17 +49,25 @@ public class DefaultBlockchainService {
     log.info("Added block: {}", block);
   }
 
-  public Block mine(List<Transaction> data) {
+  public void add(Transaction transaction) {
+    log.info("Adding transaction: {}", transaction);
+    blockchain.getTransactionPool().setTransaction(transaction);
+    log.info("Added transaction: {}", transaction);
+  }
+
+  public Block mine() {
     log.info("Mining block");
+    var transactions = blockchain.getTransactionPool().getTransactions();
     Block lastBlock = blockchain.getLastBlock();
     Block blockMined = Block.mine(lastBlock.getHash(),
-        data,
+        new ArrayList<>(transactions),
         lastBlock.getDifficulty());
 
     log.info("Broadcasting mined block");
     broadcastService.newBlockBroadcast(blockMined);
     log.info("Block mined");
     add(blockMined);
+    blockchain.getTransactionPool().clear();
     return blockMined;
   }
 

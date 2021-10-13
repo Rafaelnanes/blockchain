@@ -17,7 +17,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import test.com.rbn.blockchain.util.ConfigTests;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -46,8 +45,14 @@ public class SimpleFlowTests {
     var recipientWallet = new Wallet();
     var transaction = satoshiNakamotoWallet.createTransaction(recipientWallet.getPublicKey(), new BigDecimal(150));
 
+    blockchainService.add(transaction);
+
+    assertEquals(1, blockchain.getTransactionPool().getTransactions().size());
+
     // mining
-    blockchainService.mine(List.of(transaction));
+    blockchainService.mine();
+
+    assertEquals(0, blockchain.getTransactionPool().getTransactions().size());
 
     // assertions
     satoshiNakamotoWallet.updateBalance(blockchain);

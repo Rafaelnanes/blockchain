@@ -29,4 +29,8 @@ public class TransactionPool {
   public List<Transaction> getTransactions() {
     return Collections.unmodifiableList(transactions);
   }
+
+  public void clear() {
+    this.transactions.clear();
+  }
 }
