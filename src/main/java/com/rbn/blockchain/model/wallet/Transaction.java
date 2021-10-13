@@ -1,11 +1,13 @@
 package com.rbn.blockchain.model.wallet;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rbn.blockchain.exception.AmountExceedsBalanceException;
 import com.rbn.blockchain.exception.InvalidSignatureException;
 import com.rbn.blockchain.exception.InvalidWalletException;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -15,13 +17,24 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+@ToString
 public class Transaction {
 
   private final Wallet senderWallet;
   private final String recipientPublicKey;
   private final String id;
   private final Map<String, BigDecimal> output;
-  private TransactionInput input;
+  protected TransactionInput input;
+
+  Transaction(String recipientPublicKey, BigDecimal amount) {
+    this.senderWallet = null;
+    this.recipientPublicKey = recipientPublicKey;
+    this.id = UUID.randomUUID().toString();
+
+    this.output = new HashMap<>();
+    this.output.put(recipientPublicKey, amount);
+    this.input = new TransactionInput(amount);
+  }
 
   Transaction(Wallet senderWallet, String recipientPublicKey, BigDecimal amount) {
     this.senderWallet = senderWallet;
@@ -88,6 +101,7 @@ public class Transaction {
     this.input = new TransactionInput(this, transaction.getInputMap().amount.add(this.input.amount));
   }
 
+  @JsonIgnore
   @SneakyThrows
   public String getOutputMapAsString() {
     return new ObjectMapper().writeValueAsString(this.output.toString());
@@ -119,6 +133,14 @@ public class Transaction {
       this.amount = amount;
       this.address = senderWallet.getPublicKey();
       this.signature = senderWallet.sign(transaction.getOutputMapAsString());
+    }
+
+    @SneakyThrows
+    public TransactionInput(BigDecimal amount) {
+      this.timestamp = LocalDateTime.now();
+      this.amount = amount;
+      this.address = "reward-transaction";
+      this.signature = null;
     }
   }
 }

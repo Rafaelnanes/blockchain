@@ -4,15 +4,15 @@ import com.rbn.blockchain.exception.NotFoundException;
 import com.rbn.blockchain.model.Blockchain;
 import com.rbn.blockchain.model.wallet.Block;
 import com.rbn.blockchain.model.wallet.Transaction;
-import lombok.Getter;
+import com.rbn.blockchain.model.wallet.TransactionReward;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 @Slf4j
-@Getter
 @Service
 public class DefaultBlockchainService {
 
@@ -68,6 +68,10 @@ public class DefaultBlockchainService {
     log.info("Block mined");
     add(blockMined);
     blockchain.getTransactionPool().clear();
+
+    var wallet = broadcastService.getNodeWallet();
+    var reward = new TransactionReward(wallet.getPublicKey(), new BigDecimal(500));
+    blockchain.getTransactionPool().setTransaction(reward);
     return blockMined;
   }
 
@@ -75,6 +79,10 @@ public class DefaultBlockchainService {
     log.info("Updating blockchain");
     broadcastService.updateBlockchain().forEach(this.blockchain::replaceChain);
     log.info("Updated blockchain");
+  }
+
+  public Blockchain getBlockchain() {
+    return this.blockchain;
   }
 
 }

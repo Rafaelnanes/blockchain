@@ -2,6 +2,7 @@ package com.rbn.blockchain.model;
 
 import com.rbn.blockchain.exception.InvalidTransactionException;
 import com.rbn.blockchain.model.wallet.Transaction;
+import com.rbn.blockchain.model.wallet.TransactionReward;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -21,10 +22,13 @@ public class TransactionPool {
   }
 
   public void setTransaction(Transaction transaction) {
-    if (!Transaction.isValid(transaction)) {
-      log.info("Invalid transaction: {}", transaction);
-      throw new InvalidTransactionException();
+    if (!(transaction instanceof TransactionReward)) {
+      if (!Transaction.isValid(transaction)) {
+        log.info("Invalid transaction: {}", transaction);
+        throw new InvalidTransactionException();
+      }
     }
+
     Optional<Transaction> existingTransaction = getExistingTransaction(transaction);
     if (existingTransaction.isPresent()) {
       existingTransaction.get().update(transaction);

@@ -1,8 +1,12 @@
 package com.rbn.blockchain.exception;
 
-public class GenericException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public abstract class GenericException extends RuntimeException {
 
   public GenericException(String message) {
     super(message);
   }
+
+  public abstract HttpStatus getHttpStatus();
 }

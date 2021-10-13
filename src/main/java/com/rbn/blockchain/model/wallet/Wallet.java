@@ -69,11 +69,6 @@ public class Wallet {
     return new Transaction(this, recipientPublicKey, amount);
   }
 
-  Transaction createGenesisTransaction(String recipientPublicKey, BigDecimal amount) {
-    this.balance = this.balance.subtract(amount);
-    return new Transaction(this, recipientPublicKey, amount);
-  }
-
   @SneakyThrows
   public String sign(String data) {
     this.signature.update(data.getBytes(StandardCharsets.UTF_8));

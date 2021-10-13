@@ -1,6 +1,7 @@
 package test.com.rbn.blockchain.cases;
 
 import com.rbn.blockchain.model.Blockchain;
+import com.rbn.blockchain.model.wallet.TransactionReward;
 import com.rbn.blockchain.model.wallet.Wallet;
 import com.rbn.blockchain.service.DefaultBlockchainService;
 import com.rbn.blockchain.service.DefaultNodeService;
@@ -20,6 +21,7 @@ import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ContextConfiguration(classes = SimpleFlowTests.InternalConfig.class)
 @ExtendWith(SpringExtension.class)
@@ -54,7 +56,8 @@ public class SimpleFlowTests {
     // mining
     blockchainService.mine();
 
-    assertEquals(0, blockchain.getTransactionPool().getTransactions().size());
+    assertEquals(1, blockchain.getTransactionPool().getTransactions().size());
+    assertTrue(blockchain.getTransactionPool().getTransactions().get(0) instanceof TransactionReward);
 
     // assertions
     assertBalances(blockchain, satoshiNakamotoWallet, recipientWallet);
@@ -74,7 +77,9 @@ public class SimpleFlowTests {
 
     @Bean
     public DefaultNodeService getDefaultNodeService() {
-      return Mockito.mock(DefaultNodeService.class);
+      DefaultNodeService mock = Mockito.mock(DefaultNodeService.class);
+      Mockito.when(mock.getNodeWallet()).thenReturn(new Wallet());
+      return mock;
     }
   }
 

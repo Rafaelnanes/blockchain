@@ -2,6 +2,7 @@ package com.rbn.blockchain.service;
 
 import com.rbn.blockchain.model.Blockchain;
 import com.rbn.blockchain.model.wallet.Block;
+import com.rbn.blockchain.model.wallet.Wallet;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ import java.util.Set;
 public class DefaultNodeService {
 
   private final Set<String> nodes = new HashSet<>();
+
+  private final Wallet nodeWallet = new Wallet();
 
   @Autowired
   private HttpServletRequest httpServletRequest;

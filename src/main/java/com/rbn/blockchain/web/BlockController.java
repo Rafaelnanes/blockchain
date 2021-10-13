@@ -15,18 +15,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/blocks")
+@RequestMapping("/blockchain")
 public class BlockController {
 
   @Autowired
   private DefaultBlockchainService blockchainService;
 
   @GetMapping
-  public List<Block> getAll() {
-    return blockchainService.getBlockchain().getChain();
+  public Blockchain getAll() {
+    return blockchainService.getBlockchain();
   }
 
   @GetMapping("/{hash}")
