@@ -20,6 +20,17 @@ public class WalletTests {
   }
 
   @Test
+  void invalid_wallet_using_wrong_keyPair() {
+    String publicKey =
+        "3056301006072a8648ce3d020106052b8104000a034200046321eefa7bbc34d4b12177ac0720bded7da9a042219b93a8a290d30abdfcaa00f9257d131aae1c11dd28ca369f5e8e3b9ab527570ee8f1637e9a61d3b4638ba9";
+    String anotherPrivateKey = new Wallet().getPrivateKey();
+    Wallet wallet = new Wallet(anotherPrivateKey, publicKey, new Blockchain());
+    String sign = wallet.sign("aa");
+    boolean verify = Wallet.verify(publicKey, "aa", sign);
+    Assertions.assertFalse(verify);
+  }
+
+  @Test
   @DisplayName("False signature cuz of changed data")
   void changed_data() {
     var wallet = new Wallet();

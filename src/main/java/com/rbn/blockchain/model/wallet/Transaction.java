@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 public class Transaction {
@@ -35,13 +36,17 @@ public class Transaction {
   }
 
   public static boolean isValid(Transaction transaction) {
-    BigDecimal totalAmount = transaction.getOutputMap()
-                                        .entrySet()
-                                        .stream()
-                                        .filter(x -> !x.getKey().equals(transaction.getInputMap().address))
-                                        .map(Map.Entry::getValue)
-                                        .reduce(BigDecimal::add)
-                                        .get();
+    Optional<BigDecimal> totalAmountOptional = transaction.getOutputMap()
+                                                          .entrySet()
+                                                          .stream()
+                                                          .filter(x -> !x.getKey()
+                                                                         .equals(transaction.getInputMap().address))
+                                                          .map(Map.Entry::getValue)
+                                                          .reduce(BigDecimal::add);
+    if (totalAmountOptional.isEmpty()) {
+      return false;
+    }
+    BigDecimal totalAmount = totalAmountOptional.get();
     boolean isDataValid = Wallet.verify(transaction.senderWallet.getPublicKey(),
         transaction.getOutputMapAsString(),
         transaction.getInputMap().signature);

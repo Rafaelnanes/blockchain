@@ -52,7 +52,6 @@ public class BlockTests {
         block.getParsedData(),
         String.valueOf(block.getNonce()));
     assertEquals(generatedHash, block.getHash());
-    assertTrue(block.getEffortTime() > 0);
   }
 
 }

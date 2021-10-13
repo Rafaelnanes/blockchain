@@ -84,15 +84,24 @@ public class Blockchain {
   public BigDecimal getBalance(String publicKey) {
     BigDecimal amount = BigDecimal.ZERO;
     for (Block block : this.chain) {
-      for (Transaction transaction : block.getData()) {
-        if (!transaction.getOutputMap().containsKey(publicKey)) {
-          continue;
-        }
-        if (transaction.getInputMap().getAddress().equals(publicKey)) {
-          amount = transaction.getOutputMap().get(publicKey);
-        } else {
-          amount = amount.add(transaction.getOutputMap().get(publicKey));
-        }
+      amount = calculateBalanceForTransactions(publicKey, amount, block.getData());
+    }
+
+    amount = calculateBalanceForTransactions(publicKey, amount, transactionPool.getTransactions());
+    return amount;
+  }
+
+  private BigDecimal calculateBalanceForTransactions(String publicKey,
+                                                     BigDecimal amount,
+                                                     List<Transaction> transactions) {
+    for (Transaction transaction : transactions) {
+      if (!transaction.getOutputMap().containsKey(publicKey)) {
+        continue;
+      }
+      if (transaction.getInputMap().getAddress().equals(publicKey)) {
+        amount = transaction.getOutputMap().get(publicKey);
+      } else {
+        amount = amount.add(transaction.getOutputMap().get(publicKey));
       }
     }
     return amount;

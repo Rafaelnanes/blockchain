@@ -29,7 +29,7 @@ public class SimpleFlowTests {
   private DefaultBlockchainService blockchainService;
 
   @Test
-  void simple() {
+  void verify_balances() {
     // retrieve satoshi nakamoto's wallet
     Blockchain blockchain = blockchainService.getBlockchain();
     String publicKey =
@@ -46,6 +46,8 @@ public class SimpleFlowTests {
     var transaction = satoshiNakamotoWallet.createTransaction(recipientWallet.getPublicKey(), new BigDecimal(150));
 
     blockchainService.add(transaction);
+    // assertions
+    assertBalances(blockchain, satoshiNakamotoWallet, recipientWallet);
 
     assertEquals(1, blockchain.getTransactionPool().getTransactions().size());
 
@@ -54,6 +56,11 @@ public class SimpleFlowTests {
 
     assertEquals(0, blockchain.getTransactionPool().getTransactions().size());
 
+    // assertions
+    assertBalances(blockchain, satoshiNakamotoWallet, recipientWallet);
+  }
+
+  private void assertBalances(Blockchain blockchain, Wallet satoshiNakamotoWallet, Wallet recipientWallet) {
     // assertions
     satoshiNakamotoWallet.updateBalance(blockchain);
     recipientWallet.updateBalance(blockchain);

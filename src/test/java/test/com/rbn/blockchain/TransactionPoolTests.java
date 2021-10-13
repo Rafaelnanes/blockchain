@@ -1,5 +1,6 @@
 package test.com.rbn.blockchain;
 
+import com.rbn.blockchain.exception.InvalidTransactionException;
 import com.rbn.blockchain.model.Blockchain;
 import com.rbn.blockchain.model.TransactionPool;
 import com.rbn.blockchain.model.wallet.Transaction;
@@ -50,6 +51,26 @@ public class TransactionPoolTests {
     Optional<Transaction> existingTransaction = transactionPool.getExistingTransaction(transaction);
     Assertions.assertTrue(existingTransaction.isPresent());
     Assertions.assertEquals(transaction.getId(), existingTransaction.get().getId());
+  }
+
+  @Test
+  void invalid_transaction() {
+    // given
+    Blockchain blockchain = new Blockchain();
+    var senderWallet = TestUtils.satoshiNakamotoWallet(blockchain);
+    var secondWallet = new Wallet();
+    var transaction = senderWallet.createTransaction(secondWallet.getPublicKey(), new BigDecimal(10));
+
+    // transfer to secondWallet
+    TransactionPool transactionPool = blockchain.getTransactionPool();
+    transactionPool.setTransaction(transaction);
+
+    // a wallet with different KeyPair
+    var mixWallet = new Wallet(senderWallet.getPrivateKey(), secondWallet.getPublicKey(), blockchain);
+    var transaction2 = mixWallet.createTransaction(secondWallet.getPublicKey(), new BigDecimal(10));
+
+    // when
+    Assertions.assertThrows(InvalidTransactionException.class, () -> transactionPool.setTransaction(transaction2));
   }
 
   @Test
