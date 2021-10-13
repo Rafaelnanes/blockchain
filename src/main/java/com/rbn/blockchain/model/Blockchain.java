@@ -25,7 +25,7 @@ public class Blockchain {
   public void addBlock(Block block) throws InvalidBlockException {
     Block lastBlock = this.chain.get(this.chain.size() - 1);
     String generatedHash = Utils.generateHash(lastBlock.getHash(),
-        block.getData(),
+        block.getParsedData(),
         String.valueOf(block.getNonce()));
     boolean lastHashValid = block.getLastHash().equals(lastBlock.getHash());
     boolean validProofOfWork = generatedHash.equals(block.getHash());
@@ -56,7 +56,7 @@ public class Blockchain {
       Block lastBlock = chain.get(i - 1);
       Block currentBlock = chain.get(i);
       String generatedHash = Utils.generateHash(lastBlock.getHash(),
-          currentBlock.getData(),
+          currentBlock.getParsedData(),
           String.valueOf(currentBlock.getNonce()));
       boolean wrongProofOfWork = !generatedHash.equals(currentBlock.getHash());
       boolean lastHashDoNotMatch = !currentBlock.getLastHash().equals(lastBlock.getHash());

@@ -14,6 +14,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import test.com.rbn.blockchain.util.ConfigTests;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -30,7 +32,7 @@ public class BlockchainTests {
     var lastBlock = blockchain.getLastBlock();
 
     //when
-    Block block = Block.mine(blockchain.getLastBlock().getHash(), "data", lastBlock.getDifficulty());
+    Block block = Block.mine(blockchain.getLastBlock().getHash(), new ArrayList<>(), lastBlock.getDifficulty());
     blockchain.addBlock(block);
 
     // then
@@ -77,7 +79,7 @@ public class BlockchainTests {
   private Blockchain getBlockChainWith2Blocks() throws InvalidBlockException {
     Blockchain secondBlockChain = new Blockchain();
     Block lastBlock = secondBlockChain.getLastBlock();
-    Block block = Block.mine(lastBlock.getHash(), "data", lastBlock.getDifficulty());
+    Block block = Block.mine(lastBlock.getHash(), new ArrayList<>(), lastBlock.getDifficulty());
     secondBlockChain.addBlock(block);
     return secondBlockChain;
   }
@@ -85,9 +87,9 @@ public class BlockchainTests {
   private Blockchain getBlockchainWith3Blocks() throws InvalidBlockException {
     Blockchain firstBlockChain = new Blockchain();
     Block firstBlock = firstBlockChain.getLastBlock();
-    Block block = Block.mine(firstBlock.getHash(), "data", firstBlock.getDifficulty());
+    Block block = Block.mine(firstBlock.getHash(), new ArrayList<>(), firstBlock.getDifficulty());
     firstBlockChain.addBlock(block);
-    Block block2 = Block.mine(block.getHash(), "data2", block.getDifficulty());
+    Block block2 = Block.mine(block.getHash(), new ArrayList<>(), block.getDifficulty());
     firstBlockChain.addBlock(block2);
     return firstBlockChain;
   }

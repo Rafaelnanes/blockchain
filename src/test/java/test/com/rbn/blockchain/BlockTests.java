@@ -6,8 +6,8 @@ import com.rbn.blockchain.util.Utils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -18,12 +18,12 @@ public class BlockTests {
   @Test
   @DisplayName("has a timestamp, lastHash, hash, and data property")
   void simple_creation() {
-    var block = Block.mine("lastHash", "data", 2);
+    var block = Block.mine("lastHash", new ArrayList<>(), 2);
     assertTrue(block.getTimestamp() > 0);
     assertNotNull(block.getHash());
     assertEquals("lastHash", block.getLastHash());
-    assertEquals(2, block.getNonce());
-    assertEquals("data", block.getData());
+    assertTrue(block.getNonce() > 0);
+    assertEquals(new ArrayList<>(), block.getData());
     assertTrue(block.getDifficulty() > 0);
   }
 
@@ -36,24 +36,28 @@ public class BlockTests {
     assertEquals("lastGenesisHash", genesisBlock.getLastHash());
     assertEquals(-1, genesisBlock.getNonce());
     assertEquals(2, genesisBlock.getDifficulty());
-    String data = genesisBlock.getData();
+    var data = genesisBlock.getData();
     assertNotNull(data);
-    List<?> transactions = Utils.getObjectMapper().readValue(data, List.class);
-    assertEquals(1, transactions.size());
-    Object genesistTransaction = transactions.get(0);
-    Object outputMap = ((Map) genesistTransaction).get("outputMap");
-    Integer amount = ((Map<String, Integer>) outputMap).get(
+    var genesisTransaction = data.get(0);
+    BigDecimal amount = genesisTransaction.getOutputMap().get(
         "3056301006072a8648ce3d020106052b8104000a034200046321eefa7bbc34d4b12177ac0720bded7da9a042219b93a8a290d30abdfcaa00f9257d131aae1c11dd28ca369f5e8e3b9ab527570ee8f1637e9a61d3b4638ba9");
-    assertEquals(1000, amount);
+    assertEquals(new BigDecimal(1000), amount);
+    //    List<?> transactions = Utils.getObjectMapper().readValue(data, List.class);
+    //    assertEquals(1, transactions.size());
+    //    Object genesistTransaction = transactions.get(0);
+    //    Object outputMap = ((Map) genesistTransaction).get("outputMap");
+    //    Integer amount = ((Map<String, Integer>) outputMap).get(
+    //        "3056301006072a8648ce3d020106052b8104000a034200046321eefa7bbc34d4b12177ac0720bded7da9a042219b93a8a290d30abdfcaa00f9257d131aae1c11dd28ca369f5e8e3b9ab527570ee8f1637e9a61d3b4638ba9");
+    //    assertEquals(1000, amount);
   }
 
   @Test
   @DisplayName("mineBlock()")
   void mine_block() {
     var genesisBlock = Block.getGenesisBlock();
-    var block = Block.mine(genesisBlock.getHash(), "data", genesisBlock.getDifficulty());
+    var block = Block.mine(genesisBlock.getHash(), new ArrayList<>(), genesisBlock.getDifficulty());
     String generatedHash = Utils.generateHash(genesisBlock.getHash(),
-        "data",
+        block.getParsedData(),
         String.valueOf(block.getNonce()));
     assertEquals(generatedHash, block.getHash());
     assertTrue(block.getEffortTime() > 0);

@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 
 @Slf4j
 @Getter
@@ -51,7 +52,7 @@ public class DefaultBlockchainService {
     log.info("Mining block");
     Block lastBlock = blockchain.getLastBlock();
     Block blockMined = Block.mine(lastBlock.getHash(),
-        data,
+        new ArrayList<>(),
         lastBlock.getDifficulty());
 
     log.info("Broadcasting mined block");

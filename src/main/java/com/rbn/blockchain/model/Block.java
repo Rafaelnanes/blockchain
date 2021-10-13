@@ -22,7 +22,7 @@ public class Block {
   public static final long MINE_RATE = 1000;
   private static final int DEFAULT_DIFFICULTY = 2;
   private final String lastHash;
-  private final String data;
+  private final List<Transaction> data;
   private final int difficulty;
   @JsonIgnore
   private final long timestamp;
@@ -31,7 +31,7 @@ public class Block {
   private final String hash;
 
   private Block(String lastHash,
-                String data,
+                List<Transaction> data,
                 int difficulty,
                 long nonce,
                 String hash,
@@ -54,7 +54,7 @@ public class Block {
     List<Transaction> list = new ArrayList<>();
     list.add(transaction);
     return new Block("lastGenesisHash",
-        Utils.convertToString(list),
+        list,
         DEFAULT_DIFFICULTY,
         -1,
         "d2b402d8ef34562e8c1391dd5cf0a0da1e902642a23965440953bbe4762b474e",
@@ -62,13 +62,14 @@ public class Block {
         System.currentTimeMillis());
   }
 
-  public static Block mine(String lastHash, String data, int difficulty) {
+  public static Block mine(String lastHash, List<Transaction> data, int difficulty) {
     String finalHash;
     long nonce = 0;
     long effortTime;
     long initialTime = System.currentTimeMillis();
     difficulty++;
     int maxDifficulty = 60;
+    String parsedData = Utils.convertToString(data);
     do {
       nonce++;
       effortTime = System.currentTimeMillis() - initialTime;
@@ -80,7 +81,7 @@ public class Block {
       } else {
         difficulty++;
       }
-      finalHash = Utils.generateHash(lastHash, data, String.valueOf(nonce));
+      finalHash = Utils.generateHash(lastHash, parsedData, String.valueOf(nonce));
     } while (!Objects.requireNonNull(finalHash).matches(String.format("^\\d{%d}\\w*$", difficulty)));
     long timestamp = System.currentTimeMillis();
     return new Block(lastHash, data, difficulty, nonce, finalHash, effortTime, timestamp);
@@ -88,6 +89,10 @@ public class Block {
 
   public LocalDateTime getReceivedTime() {
     return LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault());
+  }
+
+  public String getParsedData() {
+    return Utils.convertToString(data);
   }
 
 }
