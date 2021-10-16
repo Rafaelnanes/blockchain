@@ -1,0 +1,1277 @@
+{
+	"info": {
+		"_postman_id": "63398c28-dc15-414f-9966-f36f31fc6b2c",
+		"name": "Blockchain",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Wallets",
+			"item": [
+				{
+					"name": "Create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test balance\", () => {\r",
+									"  pm.expect(jsonData[\"balance\"]).to.be.eq(0);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/wallets",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"wallets"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Simple wallet creation",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/wallets",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"wallets"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 16 Oct 2021 09:55:10 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"publicKey\": \"3056301006072a8648ce3d020106052b8104000a034200041de715d3f9404f11d3e3784847b0150c40bef46896c3b2a4e2117a0816c1438f38fb9417341f27b3534bb0189dcdf6e978e43cf36005cd7efc2435eb9702792d\",\n    \"privateKey\": \"303e020100301006072a8648ce3d020106052b8104000a0427302502010104205f4384a3cfed2473f51f0a405dc7f016be64fe4c54ee6ec7da1e999a0f7d16af\",\n    \"balance\": 0\n}"
+						}
+					]
+				},
+				{
+					"name": "Balance",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/wallets/balance?publicKey=3056301006072a8648ce3d020106052b8104000a03420004ede96931c0e325ab753a58723f524eebf485fac07748e92939e5cf9639a28b4fa6487c0eb0c0e63427ecffe4623d7836f0cf9d7cfdc2cf9456276ae576d1be26",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"wallets",
+								"balance"
+							],
+							"query": [
+								{
+									"key": "publicKey",
+									"value": "3056301006072a8648ce3d020106052b8104000a03420004ede96931c0e325ab753a58723f524eebf485fac07748e92939e5cf9639a28b4fa6487c0eb0c0e63427ecffe4623d7836f0cf9d7cfdc2cf9456276ae576d1be26"
+								},
+								{
+									"key": "privateKey",
+									"value": "303e020100301006072a8648ce3d020106052b8104000a0427302502010104202e158961dbd0a78913b3d174ad93e1eae46d45802dc0f9d20f156b3f885dbe3a",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Balance",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/wallets/balance?publicKey=3056301006072a8648ce3d020106052b8104000a03420004ede96931c0e325ab753a58723f524eebf485fac07748e92939e5cf9639a28b4fa6487c0eb0c0e63427ecffe4623d7836f0cf9d7cfdc2cf9456276ae576d1be26",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"wallets",
+										"balance"
+									],
+									"query": [
+										{
+											"key": "publicKey",
+											"value": "3056301006072a8648ce3d020106052b8104000a03420004ede96931c0e325ab753a58723f524eebf485fac07748e92939e5cf9639a28b4fa6487c0eb0c0e63427ecffe4623d7836f0cf9d7cfdc2cf9456276ae576d1be26"
+										},
+										{
+											"key": "privateKey",
+											"value": "303e020100301006072a8648ce3d020106052b8104000a0427302502010104202e158961dbd0a78913b3d174ad93e1eae46d45802dc0f9d20f156b3f885dbe3a",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 16 Oct 2021 09:56:25 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "44"
+						}
+					]
+				},
+				{
+					"name": "Get Satoshi's Wallet",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/wallets/balance?publicKey=3056301006072a8648ce3d020106052b8104000a034200046321eefa7bbc34d4b12177ac0720bded7da9a042219b93a8a290d30abdfcaa00f9257d131aae1c11dd28ca369f5e8e3b9ab527570ee8f1637e9a61d3b4638ba9",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"wallets",
+								"balance"
+							],
+							"query": [
+								{
+									"key": "publicKey",
+									"value": "3056301006072a8648ce3d020106052b8104000a034200046321eefa7bbc34d4b12177ac0720bded7da9a042219b93a8a290d30abdfcaa00f9257d131aae1c11dd28ca369f5e8e3b9ab527570ee8f1637e9a61d3b4638ba9"
+								},
+								{
+									"key": "privateKey",
+									"value": "303e020100301006072a8648ce3d020106052b8104000a042730250201010420539a3f3d9a794bc7e810b2097bcbe936ff7a95190fc68f3af8e49b59b05e49f3",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Satoshi's Wallet",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/wallets/balance?publicKey=3056301006072a8648ce3d020106052b8104000a034200046321eefa7bbc34d4b12177ac0720bded7da9a042219b93a8a290d30abdfcaa00f9257d131aae1c11dd28ca369f5e8e3b9ab527570ee8f1637e9a61d3b4638ba9",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"wallets",
+										"balance"
+									],
+									"query": [
+										{
+											"key": "publicKey",
+											"value": "3056301006072a8648ce3d020106052b8104000a034200046321eefa7bbc34d4b12177ac0720bded7da9a042219b93a8a290d30abdfcaa00f9257d131aae1c11dd28ca369f5e8e3b9ab527570ee8f1637e9a61d3b4638ba9"
+										},
+										{
+											"key": "privateKey",
+											"value": "303e020100301006072a8648ce3d020106052b8104000a042730250201010420539a3f3d9a794bc7e810b2097bcbe936ff7a95190fc68f3af8e49b59b05e49f3",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 16 Oct 2021 09:56:35 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "956"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Transactions",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"senderWallet\": {\r\n        \"privateKey\": \"303e020100301006072a8648ce3d020106052b8104000a042730250201010420539a3f3d9a794bc7e810b2097bcbe936ff7a95190fc68f3af8e49b59b05e49f3\",\r\n        \"publicKey\": \"3056301006072a8648ce3d020106052b8104000a034200046321eefa7bbc34d4b12177ac0720bded7da9a042219b93a8a290d30abdfcaa00f9257d131aae1c11dd28ca369f5e8e3b9ab527570ee8f1637e9a61d3b4638ba9\"\r\n    },\r\n    \"receiverAddress\": \"3056301006072a8648ce3d020106052b8104000a03420004ede96931c0e325ab753a58723f524eebf485fac07748e92939e5cf9639a28b4fa6487c0eb0c0e63427ecffe4623d7836f0cf9d7cfdc2cf9456276ae576d1be26\",\r\n    \"amount\": 22\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/transactions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"transactions"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Simple transaction",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"senderWallet\": {\r\n        \"privateKey\": \"303e020100301006072a8648ce3d020106052b8104000a042730250201010420539a3f3d9a794bc7e810b2097bcbe936ff7a95190fc68f3af8e49b59b05e49f3\",\r\n        \"publicKey\": \"3056301006072a8648ce3d020106052b8104000a034200046321eefa7bbc34d4b12177ac0720bded7da9a042219b93a8a290d30abdfcaa00f9257d131aae1c11dd28ca369f5e8e3b9ab527570ee8f1637e9a61d3b4638ba9\"\r\n    },\r\n    \"receiverAddress\": \"3056301006072a8648ce3d020106052b8104000a03420004ede96931c0e325ab753a58723f524eebf485fac07748e92939e5cf9639a28b4fa6487c0eb0c0e63427ecffe4623d7836f0cf9d7cfdc2cf9456276ae576d1be26\",\r\n    \"amount\": 22\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/transactions",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"transactions"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 16 Oct 2021 09:53:56 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"5912f137-14e3-416f-a1df-6176f49c74ee\",\n    \"inputMap\": {\n        \"timestamp\": \"2021-10-16T10:53:56.6513527\",\n        \"amount\": 22,\n        \"address\": \"3056301006072a8648ce3d020106052b8104000a034200046321eefa7bbc34d4b12177ac0720bded7da9a042219b93a8a290d30abdfcaa00f9257d131aae1c11dd28ca369f5e8e3b9ab527570ee8f1637e9a61d3b4638ba9\",\n        \"signature\": \"4d45594349514337617333307331724768337a33583744396175633249436a313544434d546c6755436c55367138345148674968414969476d7372577232727a45506c73522f322f5966566576676e54517532496156736a6170777632394254\"\n    },\n    \"recipient\": \"3056301006072a8648ce3d020106052b8104000a03420004ede96931c0e325ab753a58723f524eebf485fac07748e92939e5cf9639a28b4fa6487c0eb0c0e63427ecffe4623d7836f0cf9d7cfdc2cf9456276ae576d1be26\",\n    \"outputMap\": {\n        \"3056301006072a8648ce3d020106052b8104000a034200046321eefa7bbc34d4b12177ac0720bded7da9a042219b93a8a290d30abdfcaa00f9257d131aae1c11dd28ca369f5e8e3b9ab527570ee8f1637e9a61d3b4638ba9\": 956,\n        \"3056301006072a8648ce3d020106052b8104000a03420004ede96931c0e325ab753a58723f524eebf485fac07748e92939e5cf9639a28b4fa6487c0eb0c0e63427ecffe4623d7836f0cf9d7cfdc2cf9456276ae576d1be26\": 22\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Blockchain",
+			"item": [
+				{
+					"name": "Get blockchain",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/blockchain",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"blockchain"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Example",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/blockchain",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"blockchain"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 16 Oct 2021 09:56:47 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"chain\": [\n        {\n            \"lastHash\": \"lastGenesisHash\",\n            \"data\": [\n                {\n                    \"id\": \"af4b5ee3-e960-491f-a3f5-32842b0a3c00\",\n                    \"inputMap\": {\n                        \"timestamp\": \"2021-10-16T10:53:07.2469687\",\n                        \"amount\": 1000,\n                        \"address\": \"reward-transaction\",\n                        \"signature\": null\n                    },\n                    \"recipient\": \"3056301006072a8648ce3d020106052b8104000a034200046321eefa7bbc34d4b12177ac0720bded7da9a042219b93a8a290d30abdfcaa00f9257d131aae1c11dd28ca369f5e8e3b9ab527570ee8f1637e9a61d3b4638ba9\",\n                    \"outputMap\": {\n                        \"3056301006072a8648ce3d020106052b8104000a034200046321eefa7bbc34d4b12177ac0720bded7da9a042219b93a8a290d30abdfcaa00f9257d131aae1c11dd28ca369f5e8e3b9ab527570ee8f1637e9a61d3b4638ba9\": 1000\n                    }\n                }\n            ],\n            \"difficulty\": 2,\n            \"effortTime\": 0,\n            \"nonce\": -1,\n            \"hash\": \"d2b402d8ef34562e8c1391dd5cf0a0da1e902642a23965440953bbe4762b474e\"\n        }\n    ],\n    \"transactionPool\": {\n        \"transactions\": [\n            {\n                \"id\": \"dba75ce6-f034-4442-9665-57bdece98019\",\n                \"inputMap\": {\n                    \"timestamp\": \"2021-10-16T10:53:56.6599588\",\n                    \"amount\": 44,\n                    \"address\": \"3056301006072a8648ce3d020106052b8104000a034200046321eefa7bbc34d4b12177ac0720bded7da9a042219b93a8a290d30abdfcaa00f9257d131aae1c11dd28ca369f5e8e3b9ab527570ee8f1637e9a61d3b4638ba9\",\n                    \"signature\": \"4d455543495143353336306676386b505969796a6859484e383031586e714463506b7a3846727a526a495163626e73574d674967497454695179354f49375157504d777a68754b30336a45706b756843653366794f376b734f30774e6454553d\"\n                },\n                \"recipient\": \"3056301006072a8648ce3d020106052b8104000a03420004ede96931c0e325ab753a58723f524eebf485fac07748e92939e5cf9639a28b4fa6487c0eb0c0e63427ecffe4623d7836f0cf9d7cfdc2cf9456276ae576d1be26\",\n                \"outputMap\": {\n                    \"3056301006072a8648ce3d020106052b8104000a034200046321eefa7bbc34d4b12177ac0720bded7da9a042219b93a8a290d30abdfcaa00f9257d131aae1c11dd28ca369f5e8e3b9ab527570ee8f1637e9a61d3b4638ba9\": 956,\n                    \"3056301006072a8648ce3d020106052b8104000a03420004ede96931c0e325ab753a58723f524eebf485fac07748e92939e5cf9639a28b4fa6487c0eb0c0e63427ecffe4623d7836f0cf9d7cfdc2cf9456276ae576d1be26\": 44\n                }\n            }\n        ]\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "GET - {hash}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/blockchain/:hash",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"blockchain",
+								":hash"
+							],
+							"variable": [
+								{
+									"key": "hash",
+									"value": "d2b402d8ef34562e8c1391dd5cf0a0da1e902642a23965440953bbe4762b474e"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "GET - {hash}",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/blockchain/:hash",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"blockchain",
+										":hash"
+									],
+									"variable": [
+										{
+											"key": "hash",
+											"value": "d2b402d8ef34562e8c1391dd5cf0a0da1e902642a23965440953bbe4762b474e"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 16 Oct 2021 09:57:39 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"lastHash\": \"lastGenesisHash\",\n    \"data\": [\n        {\n            \"id\": \"af4b5ee3-e960-491f-a3f5-32842b0a3c00\",\n            \"inputMap\": {\n                \"timestamp\": \"2021-10-16T10:53:07.2469687\",\n                \"amount\": 1000,\n                \"address\": \"reward-transaction\",\n                \"signature\": null\n            },\n            \"recipient\": \"3056301006072a8648ce3d020106052b8104000a034200046321eefa7bbc34d4b12177ac0720bded7da9a042219b93a8a290d30abdfcaa00f9257d131aae1c11dd28ca369f5e8e3b9ab527570ee8f1637e9a61d3b4638ba9\",\n            \"outputMap\": {\n                \"3056301006072a8648ce3d020106052b8104000a034200046321eefa7bbc34d4b12177ac0720bded7da9a042219b93a8a290d30abdfcaa00f9257d131aae1c11dd28ca369f5e8e3b9ab527570ee8f1637e9a61d3b4638ba9\": 1000\n            }\n        }\n    ],\n    \"difficulty\": 2,\n    \"effortTime\": 0,\n    \"nonce\": -1,\n    \"hash\": \"d2b402d8ef34562e8c1391dd5cf0a0da1e902642a23965440953bbe4762b474e\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Mine",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/blockchain/mine",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"blockchain",
+								"mine"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consensus",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/blockchain/consensus",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"blockchain",
+								"consensus"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Nodes",
+			"item": [
+				{
+					"name": "GET",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/nodes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"nodes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nodeUrl\":\"http://server-8081:8081\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/nodes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"nodes"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Use Cases",
+			"item": [
+				{
+					"name": "Node registry broadcast (using docker)",
+					"item": [
+						{
+							"name": "Registering node",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"  pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const jsonData = pm.response.json();\r",
+											"pm.test(\"Test array properties\", () => {\r",
+											"  pm.expect(jsonData).not.empty;\r",
+											"  pm.expect(jsonData[0]).to.be.eq(\"http://server-8081:8081\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"nodeUrl\":\"http://server-8081:8081\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/nodes",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"nodes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Verify Registered Node in 8080",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"  pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const jsonData = pm.response.json();\r",
+											"pm.test(\"Test array properties\", () => {\r",
+											"  pm.expect(jsonData).not.empty;\r",
+											"  pm.expect(jsonData[0]).to.be.eq(\"http://server-8081:8081\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/nodes",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"nodes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Verify Registered Node in 8081",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"  pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const jsonData = pm.response.json();\r",
+											"pm.test(\"Test array properties\", () => {\r",
+											"  pm.expect(jsonData).not.empty;\r",
+											"  pm.expect(jsonData[0]).to.be.eq(\"http://server-8080:8080\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"\r",
+											"var Collection = require('postman-collection').Collection;\r",
+											"console.log(Collection);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8081/nodes",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"nodes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get blockchain - 8080",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"  pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const jsonData = pm.response.json();\r",
+											"pm.test(\"Test array properties\", () => {\r",
+											"  pm.expect(jsonData).not.empty;\r",
+											"  pm.expect(jsonData.length).to.be.eq(2);\r",
+											"  pm.expect(jsonData[0].hash).to.be.eq(\"d2b402d8ef34562e8c1391dd5cf0a0da1e902642a23965440953bbe4762b474e\");\r",
+											"  pm.expect(jsonData[1].lastHash).to.be.eq(\"d2b402d8ef34562e8c1391dd5cf0a0da1e902642a23965440953bbe4762b474e\");\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/blocks",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"blocks"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get blockchain - 8081",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"  pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const jsonData = pm.response.json();\r",
+											"pm.test(\"Test array properties\", () => {\r",
+											"  pm.expect(jsonData).not.empty;\r",
+											"  pm.expect(jsonData.length).to.be.eq(2);\r",
+											"  pm.expect(jsonData[0].hash).to.be.eq(\"d2b402d8ef34562e8c1391dd5cf0a0da1e902642a23965440953bbe4762b474e\");\r",
+											"  pm.expect(jsonData[1].lastHash).to.be.eq(\"d2b402d8ef34562e8c1391dd5cf0a0da1e902642a23965440953bbe4762b474e\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8081/blocks",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"blocks"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Mining",
+					"item": [
+						{
+							"name": "Add Transaction",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"  pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const jsonData = pm.response.json();\r",
+											"pm.test(\"Test json output\", () => {\r",
+											"  let receiver = pm.collectionVariables.get(\"receiverPublicKey\");\r",
+											"  let sender = pm.collectionVariables.get(\"senderPublicKey\");\r",
+											"  pm.expect(jsonData).not.null;\r",
+											"  pm.expect(jsonData.recipient).to.be.eq(receiver);\r",
+											"  pm.expect(jsonData.inputMap.amount).to.be.eq(22);\r",
+											"  pm.expect(jsonData[\"inputMap\"][\"address\"]).to.be.eq(sender);\r",
+											"  pm.expect(jsonData[\"outputMap\"][sender]).to.be.eq(978);\r",
+											"  pm.expect(jsonData[\"outputMap\"][receiver]).to.be.eq(22);\r",
+											"});\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"senderWallet\": {\r\n        \"privateKey\": \"303e020100301006072a8648ce3d020106052b8104000a042730250201010420539a3f3d9a794bc7e810b2097bcbe936ff7a95190fc68f3af8e49b59b05e49f3\",\r\n        \"publicKey\": \"3056301006072a8648ce3d020106052b8104000a034200046321eefa7bbc34d4b12177ac0720bded7da9a042219b93a8a290d30abdfcaa00f9257d131aae1c11dd28ca369f5e8e3b9ab527570ee8f1637e9a61d3b4638ba9\"\r\n    },\r\n    \"receiverAddress\": \"3056301006072a8648ce3d020106052b8104000a03420004ede96931c0e325ab753a58723f524eebf485fac07748e92939e5cf9639a28b4fa6487c0eb0c0e63427ecffe4623d7836f0cf9d7cfdc2cf9456276ae576d1be26\",\r\n    \"amount\": 22\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/transactions",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"transactions"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get blockchain",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"  pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const jsonData = pm.response.json();\r",
+											"pm.test(\"Test json output\", () => {\r",
+											"  let receiver = pm.collectionVariables.get(\"receiverPublicKey\");\r",
+											"  let sender = pm.collectionVariables.get(\"senderPublicKey\");\r",
+											"  pm.expect(jsonData).not.null;\r",
+											"  pm.expect(jsonData.transactionPool).not.null;\r",
+											"  let transactions = jsonData.transactionPool.transactions;\r",
+											"  pm.expect(transactions).not.empty;\r",
+											"  pm.expect(transactions).lengthOf(1);\r",
+											"  pm.expect(transactions[0].recipient).to.be.eq(receiver);\r",
+											"  pm.expect(transactions[0].inputMap.amount).to.be.eq(22);\r",
+											"  pm.expect(transactions[0][\"inputMap\"][\"address\"]).to.be.eq(sender);\r",
+											"  pm.expect(transactions[0][\"outputMap\"][sender]).to.be.eq(978);\r",
+											"  pm.expect(transactions[0][\"outputMap\"][receiver]).to.be.eq(22);\r",
+											"});\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/blockchain",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"blockchain"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Second Transaction",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"  pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const jsonData = pm.response.json();\r",
+											"pm.test(\"Test json output\", () => {\r",
+											"  let receiver = pm.collectionVariables.get(\"receiverPublicKey\");\r",
+											"  let sender = pm.collectionVariables.get(\"senderPublicKey\");\r",
+											"  pm.expect(jsonData).not.null;\r",
+											"  pm.expect(jsonData.recipient).to.be.eq(receiver);\r",
+											"  pm.expect(jsonData.inputMap.amount).to.be.eq(44);\r",
+											"  pm.expect(jsonData[\"inputMap\"][\"address\"]).to.be.eq(sender);\r",
+											"  pm.expect(jsonData[\"outputMap\"][sender]).to.be.eq(956);\r",
+											"  pm.expect(jsonData[\"outputMap\"][receiver]).to.be.eq(44);\r",
+											"});\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"senderWallet\": {\r\n        \"privateKey\": \"303e020100301006072a8648ce3d020106052b8104000a042730250201010420539a3f3d9a794bc7e810b2097bcbe936ff7a95190fc68f3af8e49b59b05e49f3\",\r\n        \"publicKey\": \"3056301006072a8648ce3d020106052b8104000a034200046321eefa7bbc34d4b12177ac0720bded7da9a042219b93a8a290d30abdfcaa00f9257d131aae1c11dd28ca369f5e8e3b9ab527570ee8f1637e9a61d3b4638ba9\"\r\n    },\r\n    \"receiverAddress\": \"3056301006072a8648ce3d020106052b8104000a03420004ede96931c0e325ab753a58723f524eebf485fac07748e92939e5cf9639a28b4fa6487c0eb0c0e63427ecffe4623d7836f0cf9d7cfdc2cf9456276ae576d1be26\",\r\n    \"amount\": 22\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/transactions",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"transactions"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get blockchain",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"  pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const jsonData = pm.response.json();\r",
+											"pm.test(\"Test json output\", () => {\r",
+											"  let receiver = pm.collectionVariables.get(\"receiverPublicKey\");\r",
+											"  let sender = pm.collectionVariables.get(\"senderPublicKey\");\r",
+											"  pm.expect(jsonData).not.null;\r",
+											"  pm.expect(jsonData.transactionPool).not.null;\r",
+											"  let transactions = jsonData.transactionPool.transactions;\r",
+											"  pm.expect(transactions).not.empty;\r",
+											"  pm.expect(transactions).lengthOf(1);\r",
+											"  pm.expect(transactions[0].recipient).to.be.eq(receiver);\r",
+											"  pm.expect(transactions[0].inputMap.amount).to.be.eq(44);\r",
+											"  pm.expect(transactions[0][\"inputMap\"][\"address\"]).to.be.eq(sender);\r",
+											"  pm.expect(transactions[0][\"outputMap\"][sender]).to.be.eq(956);\r",
+											"  pm.expect(transactions[0][\"outputMap\"][receiver]).to.be.eq(44);\r",
+											"});\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/blockchain",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"blockchain"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Mine",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"  pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const jsonData = pm.response.json();\r",
+											"pm.test(\"Test json output\", () => {\r",
+											"  let receiver = pm.collectionVariables.get(\"receiverPublicKey\");\r",
+											"  let sender = pm.collectionVariables.get(\"senderPublicKey\");\r",
+											"  pm.expect(jsonData).not.null;\r",
+											"  pm.expect(jsonData.data).not.empty;\r",
+											"  let transaction = jsonData.data[0];\r",
+											"  pm.expect(transaction.recipient).to.be.eq(receiver);\r",
+											"  pm.expect(transaction.inputMap.amount).to.be.eq(44);\r",
+											"  pm.expect(transaction[\"inputMap\"][\"address\"]).to.be.eq(sender);\r",
+											"  pm.expect(transaction[\"outputMap\"][sender]).to.be.eq(956);\r",
+											"  pm.expect(transaction[\"outputMap\"][receiver]).to.be.eq(44);\r",
+											"});\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/blockchain/mine",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"blockchain",
+										"mine"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get blockchain",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"  pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"const jsonData = pm.response.json();\r",
+											"let receiver = pm.collectionVariables.get(\"receiverPublicKey\");\r",
+											"let sender = pm.collectionVariables.get(\"senderPublicKey\");\r",
+											"pm.test(\"Test blocks alread mined\", () => {\r",
+											"  pm.expect(jsonData).not.null;\r",
+											"  pm.expect(jsonData.chain).not.empty;\r",
+											"  pm.expect(jsonData.chain).lengthOf(2);\r",
+											"  pm.expect(jsonData.chain[0].lastHash).to.be.eq(\"lastGenesisHash\")\r",
+											"\r",
+											"  let lastBlock = jsonData.chain[1];\r",
+											"  pm.expect(lastBlock.lastHash).to.be.eq(jsonData.chain[0].hash)\r",
+											"  console.log(lastBlock.data[0].recipient)\r",
+											"  let lastBlockData = lastBlock.data[0];\r",
+											"  pm.expect(lastBlock.data).lengthOf(1);\r",
+											"  pm.expect(lastBlockData.recipient).to.be.eq(receiver);\r",
+											"  pm.expect(lastBlockData.inputMap.amount).to.be.eq(44);\r",
+											"  pm.expect(lastBlockData[\"inputMap\"][\"address\"]).to.be.eq(sender);\r",
+											"  pm.expect(lastBlockData[\"outputMap\"][sender]).to.be.eq(956);\r",
+											"  pm.expect(lastBlockData[\"outputMap\"][receiver]).to.be.eq(44);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Test transaction pool\", () => {\r",
+											"  pm.expect(jsonData.transactionPool).not.null;\r",
+											"  let transactions = jsonData.transactionPool.transactions;\r",
+											"  pm.expect(transactions).not.empty;\r",
+											"  pm.expect(transactions).lengthOf(1);\r",
+											"  pm.expect(transactions[0].inputMap.amount).to.be.eq(500);\r",
+											"  pm.expect(transactions[0][\"inputMap\"][\"address\"]).to.be.eq(\"reward-transaction\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/blockchain",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"blockchain"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.collectionVariables.set(\"senderPublicKey\", \"3056301006072a8648ce3d020106052b8104000a034200046321eefa7bbc34d4b12177ac0720bded7da9a042219b93a8a290d30abdfcaa00f9257d131aae1c11dd28ca369f5e8e3b9ab527570ee8f1637e9a61d3b4638ba9\");",
+									"pm.collectionVariables.set(\"receiverPublicKey\", \"3056301006072a8648ce3d020106052b8104000a03420004ede96931c0e325ab753a58723f524eebf485fac07748e92939e5cf9639a28b4fa6487c0eb0c0e63427ecffe4623d7836f0cf9d7cfdc2cf9456276ae576d1be26\");"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "registeredUrl",
+			"value": ""
+		},
+		{
+			"key": "senderPublicKey",
+			"value": ""
+		},
+		{
+			"key": "receiverPublicKey",
+			"value": ""
+		}
+	]
+}

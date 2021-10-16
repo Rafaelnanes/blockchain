@@ -29,7 +29,8 @@ public class Blockchain {
     Block lastBlock = this.chain.get(this.chain.size() - 1);
     String generatedHash = Utils.generateHash(lastBlock.getHash(),
         block.getParsedData(),
-        String.valueOf(block.getNonce()));
+        String.valueOf(block.getNonce()),
+        block.getTimestamp().toString());
     boolean lastHashValid = block.getLastHash().equals(lastBlock.getHash());
     boolean validProofOfWork = generatedHash.equals(block.getHash());
     if (lastHashValid && validProofOfWork) {
@@ -60,7 +61,8 @@ public class Blockchain {
       Block currentBlock = chain.get(i);
       String generatedHash = Utils.generateHash(lastBlock.getHash(),
           currentBlock.getParsedData(),
-          String.valueOf(currentBlock.getNonce()));
+          String.valueOf(currentBlock.getNonce()),
+          currentBlock.getTimestamp().toString());
       boolean wrongProofOfWork = !generatedHash.equals(currentBlock.getHash());
       boolean lastHashDoNotMatch = !currentBlock.getLastHash().equals(lastBlock.getHash());
       if (lastHashDoNotMatch || wrongProofOfWork) {

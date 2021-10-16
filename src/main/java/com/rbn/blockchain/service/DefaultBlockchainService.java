@@ -59,9 +59,8 @@ public class DefaultBlockchainService {
     log.info("Mining block");
     var transactions = blockchain.getTransactionPool().getTransactions();
     Block lastBlock = blockchain.getLastBlock();
-    Block blockMined = Block.mine(lastBlock.getHash(),
-        new ArrayList<>(transactions),
-        lastBlock.getDifficulty());
+    Block blockMined = Block.mine(lastBlock,
+        new ArrayList<>(transactions));
 
     log.info("Broadcasting mined block");
     broadcastService.newBlockBroadcast(blockMined);

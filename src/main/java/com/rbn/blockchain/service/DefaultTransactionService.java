@@ -20,7 +20,7 @@ public class DefaultTransactionService {
     Transaction transaction = senderWallet.createTransaction(createTransactionRequest.getReceiverAddress(),
         createTransactionRequest.getAmount());
     blockchainService.add(transaction);
-    return transaction;
+    return blockchainService.getBlockchain().getTransactionPool().getExistingTransaction(transaction).get();
   }
 
 }

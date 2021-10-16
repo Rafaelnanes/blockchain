@@ -6,24 +6,21 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Getter
 @ToString
 public class Block {
 
-  public static final long MINE_RATE = 1000;
-  private static final int DEFAULT_DIFFICULTY = 2;
+  public static final long MINE_RATE = 2000;
+  private static final int DEFAULT_DIFFICULTY = 1;
   private final String lastHash;
   private final List<Transaction> data;
   private final int difficulty;
   @JsonIgnore
-  private final long timestamp;
+  private final LocalDateTime timestamp;
   private final long effortTime;
   private final long nonce;
   private final String hash;
@@ -34,7 +31,7 @@ public class Block {
                 long nonce,
                 String hash,
                 long effortTime,
-                long timestamp) {
+                LocalDateTime timestamp) {
     this.difficulty = difficulty;
     this.data = data;
     this.lastHash = lastHash;
@@ -56,36 +53,29 @@ public class Block {
         -1,
         "d2b402d8ef34562e8c1391dd5cf0a0da1e902642a23965440953bbe4762b474e",
         0,
-        System.currentTimeMillis());
+        LocalDateTime.now());
   }
 
-  public static Block mine(String lastHash, List<Transaction> data, int difficulty) {
+  public static Block mine(Block lastBlock, List<Transaction> data) {
+    String lastHash = lastBlock.getHash();
+    int difficulty = lastBlock.getDifficulty() + 1;
+    if (lastBlock.getEffortTime() > MINE_RATE) {
+      difficulty = lastBlock.getDifficulty() - 1;
+    }
+
     String finalHash;
     long nonce = 0;
     long effortTime;
     long initialTime = System.currentTimeMillis();
-    difficulty++;
-    int maxDifficulty = 60;
     String parsedData = Utils.convertToString(data);
+    LocalDateTime now = LocalDateTime.now();
+    String currentDate = now.toString();
     do {
       nonce++;
       effortTime = System.currentTimeMillis() - initialTime;
-      if (difficulty > maxDifficulty) {
-        difficulty = maxDifficulty;
-      }
-      if (effortTime >= MINE_RATE && difficulty > 1) {
-        difficulty--;
-      } else {
-        difficulty++;
-      }
-      finalHash = Utils.generateHash(lastHash, parsedData, String.valueOf(nonce));
-    } while (!Objects.requireNonNull(finalHash).matches(String.format("^\\d{%d}\\w*$", difficulty)));
-    long timestamp = System.currentTimeMillis();
-    return new Block(lastHash, data, difficulty, nonce, finalHash, effortTime, timestamp);
-  }
-
-  public LocalDateTime getReceivedTime() {
-    return LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault());
+      finalHash = Utils.generateHash(lastHash, parsedData, String.valueOf(nonce), currentDate);
+    } while (!finalHash.startsWith("0".repeat(difficulty)));
+    return new Block(lastHash, data, difficulty, nonce, finalHash, effortTime, now);
   }
 
   @JsonIgnore

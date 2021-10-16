@@ -21,7 +21,7 @@ public class BlockchainTests {
     var lastBlock = blockchain.getLastBlock();
 
     //when
-    Block block = Block.mine(blockchain.getLastBlock().getHash(), new ArrayList<>(), lastBlock.getDifficulty());
+    Block block = Block.mine(blockchain.getLastBlock(), new ArrayList<>());
     blockchain.addBlock(block);
 
     // then
@@ -68,7 +68,7 @@ public class BlockchainTests {
   private Blockchain getBlockChainWith2Blocks() throws InvalidBlockException {
     Blockchain secondBlockChain = new Blockchain();
     Block lastBlock = secondBlockChain.getLastBlock();
-    Block block = Block.mine(lastBlock.getHash(), new ArrayList<>(), lastBlock.getDifficulty());
+    Block block = Block.mine(lastBlock, new ArrayList<>());
     secondBlockChain.addBlock(block);
     return secondBlockChain;
   }
@@ -76,9 +76,9 @@ public class BlockchainTests {
   private Blockchain getBlockchainWith3Blocks() throws InvalidBlockException {
     Blockchain firstBlockChain = new Blockchain();
     Block firstBlock = firstBlockChain.getLastBlock();
-    Block block = Block.mine(firstBlock.getHash(), new ArrayList<>(), firstBlock.getDifficulty());
+    Block block = Block.mine(firstBlock, new ArrayList<>());
     firstBlockChain.addBlock(block);
-    Block block2 = Block.mine(block.getHash(), new ArrayList<>(), block.getDifficulty());
+    Block block2 = Block.mine(block, new ArrayList<>());
     firstBlockChain.addBlock(block2);
     return firstBlockChain;
   }
